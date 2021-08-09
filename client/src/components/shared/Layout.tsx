@@ -1,0 +1,30 @@
+import cn from "classnames";
+import React, { useState } from "react";
+import SideBar from "../SideBar";
+
+type Props = {
+  children: React.ReactNode;
+  sideDrawer: React.ReactNode;
+};
+
+export default function Layout({ children, sideDrawer }: Props) {
+  const [isSideDrawerOpen, setIsSideDrawerOpen] = useState(false);
+  const toggleSideMenu = () => {
+    setIsSideDrawerOpen(!isSideDrawerOpen);
+  };
+  const contentStyle = cn("ml-14 sm:ml-20 px-5 bg-gray-50", {
+    "hidden md:block md:mr-96": isSideDrawerOpen,
+  });
+
+  return (
+    <div className="w-full min-h-screen">
+      <SideBar sideDrawerHandler={toggleSideMenu} />
+      <main className={contentStyle}>{children}</main>
+      {isSideDrawerOpen && (
+        <aside className="w-full h-screen shadow-lg md:right-0 reltaive md:fixed md:top-0 ml-14 sm:ml-20 md:ml-0 md:w-96">
+          {sideDrawer}
+        </aside>
+      )}
+    </div>
+  );
+}

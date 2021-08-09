@@ -1,0 +1,70 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development; next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "jest",
+    "storybook": "cross-env NODE_ENV=development; start-storybook -s ./public -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "dependencies": {
+    "@material-ui/icons": "^4.11.2",
+    "@reduxjs/toolkit": "^1.6.1",
+    "@tailwindcss/forms": "^0.3.3",
+    "classnames": "^2.3.1",
+    "formik": "^2.2.9",
+    "framer-motion": "^4.1.17",
+    "next": "11.0.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-query": "^3.19.2",
+    "react-redux": "^7.2.4",
+    "recharts": "^2.0.10"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.8",
+    "@storybook/addon-actions": "^6.3.6",
+    "@storybook/addon-essentials": "^6.3.6",
+    "@storybook/addon-links": "^6.3.6",
+    "@storybook/addon-postcss": "^2.0.0",
+    "@storybook/react": "^6.3.6",
+    "@testing-library/dom": "^8.1.0",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.0.0",
+    "@testing-library/user-event": "^13.2.1",
+    "@types/jest": "^26.0.24",
+    "@types/node": "^16.4.12",
+    "@types/react": "^17.0.15",
+    "autoprefixer": "^10.3.1",
+    "babel-jest": "^27.0.6",
+    "babel-loader": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "cssnano": "^5.0.7",
+    "eslint": "7.31.0",
+    "eslint-config-next": "11.0.1",
+    "eslint-import-resolver-typescript": "^2.4.0",
+    "jest": "^27.0.6",
+    "postcss": "^8.3.6",
+    "prettier": "^2.2.1",
+    "storybook-dark-mode": "^1.0.8",
+    "tailwindcss": "^2.2.7",
+    "tsconfig-paths-webpack-plugin": "^3.5.1",
+    "typescript": "^4.3.5"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

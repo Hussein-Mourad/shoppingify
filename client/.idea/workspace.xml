@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="c94b4394-75e4-4694-896b-fc239c68b978" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/components/SideBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../auth/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../auth/.idea/auth.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../auth/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../auth/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../auth/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../auth/client/components/AuthCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../auth/client/components/AuthCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../auth/client/pages/edit.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../auth/client/pages/edit.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../auth/client/pages/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../auth/client/pages/index.jsx" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="ProjectId" id="1w37ha1CYfLkhTLU2hB8LsaIUjj" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../auth" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="prettierjs.PrettierConfiguration.Package" value="$PROJECT_DIR$/node_modules/prettier" />
+    <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c94b4394-75e4-4694-896b-fc239c68b978" name="Changes" comment="" />
+      <created>1627675555199</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1627675555199</updated>
+      <workItem from="1627675557336" duration="117000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
