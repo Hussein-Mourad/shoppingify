@@ -1,0 +1,52 @@
+{
+  "name": "shoppingify",
+  "version": "0.0.0",
+  "private": true,
+  "main": "dist/app",
+  "engines": {
+    "node": "v14.17.0"
+  },
+  "scripts": {
+    "start": "node ./bin/www.ts",
+    "dev": "DEBUG=shoppingify:* nodemon ./bin/www.ts",
+    "build": "tsc -p .",
+    "webpack": "webpack"
+  },
+  "nodemonConfig": {
+    "verbose": true,
+    "ignore": [
+      "client/*",
+      "public/*",
+      ".git",
+      "node_modules/",
+      "dist/"
+    ],
+    "watch": "src/",
+    "ext": "js,json,ts",
+    "env": {
+      "NODE_ENV": "development"
+    }
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "dotenv": "^10.0.0",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.2",
+    "@types/debug": "^4.1.7",
+    "@types/express": "^4.17.13",
+    "@types/http-errors": "^1.8.1",
+    "@types/morgan": "^1.9.3",
+    "@types/node": "^16.4.13",
+    "nodemon": "^2.0.12",
+    "ts-loader": "^9.2.5",
+    "ts-node": "^10.2.0",
+    "typescript": "^4.3.5",
+    "webpack": "^5.49.0",
+    "webpack-cli": "^4.7.2"
+  }
+}
