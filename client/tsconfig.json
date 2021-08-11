@@ -23,7 +23,8 @@
       "utils/*": ["./src/utils/*"],
       "stories/*": ["./src/stories/*"],
       "app/*": ["./src/app/*"],
-      "features/*": ["./src/features/*"]
+      "features/*": ["./src/features/*"],
+      "hooks/*":["./src/hooks/*"]
     }
   },
   "include": ["next-env.d.ts", "./src/**/*"],
