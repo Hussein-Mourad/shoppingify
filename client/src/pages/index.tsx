@@ -1,7 +1,7 @@
 import CategoryGrid from "components/CategoryGrid";
 import Header from "components/Header";
-import ItemCard from "features/shoppingList/ItemCard";
 import Layout from "components/shared/Layout";
+import ItemCard from "features/shoppingList/ItemCard";
 import ShoppingList from "features/shoppingList/ShoppingList";
 import Head from "next/head";
 
@@ -17,7 +17,7 @@ export default function Home() {
       <Layout sideDrawer={<ShoppingList />}>
         <div className="min-h-screen p-2 sm:p-4 md:p-6">
           <Header />
-          <div className="mt-4 sm:mt-8">
+          <div className="mt-4 sm:mt-6 md:mt-8">
             <CategoryGrid name="Fruits and vegetables">
               {[
                 "Avocado",

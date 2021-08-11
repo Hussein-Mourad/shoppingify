@@ -56,7 +56,7 @@ export default function SideBar({
           <ShoppingCartIcon />
         </span>
         <span className="hidden sm:block">
-          <ShoppingCartIcon fontSize="large" />
+          <ShoppingCartIcon style={{ fontSize: 30 }} />
         </span>
       </Button>
     </aside>

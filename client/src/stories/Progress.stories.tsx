@@ -15,5 +15,5 @@ export const Default = Template.bind({});
 Default.args = {
   text: "Banana",
   percentage: 30,
-  progressColor: "bg-yellow-500",
+  progressColor: "bg-yellow-primary",
 };

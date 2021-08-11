@@ -26,7 +26,7 @@ function ItemDetails({
       <div className="flex-1 w-full px-5 overflow-auto sidedrawer-scrollbar">
         <div>
           <Button
-            className="mt-4 text-sm text-yellow-500"
+            className="mt-4 text-sm text-yellow-primary"
             onClick={onClose}
             leftIcon={
               <ArrowRightAltIcon className="rotate-180" fontSize="small" />

@@ -14,7 +14,9 @@ export default function ItemHistoryCard({
     <Card
       leftElements={text}
       rightElements={
-        <p className="text-sm font-medium text-yellow-500">{quantity} pcs</p>
+        <p className="text-sm font-medium text-yellow-primary">
+          {quantity} pcs
+        </p>
       }
     ></Card>
   );

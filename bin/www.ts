@@ -1,16 +1,33 @@
 #!/usr/bin/env node
 
 import http from "http";
-import app from "../src/app";
+import { connect } from "mongoose";
+import app from "../src/index";
 
 var port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
 var server = http.createServer(app);
 
-server.listen(port);
-server.on("error", onError);
-server.on("listening", onListening);
+if (!process.env.DB_URI) {
+  throw new Error("Make sure you have DB_URI in your environment variables.");
+} else {
+  connect(process.env.DB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  })
+    .then((result) => {
+      console.log(`Connected to db: ${result.connection.host}`);
+      server.listen(port);
+      server.on("error", onError);
+      server.on("listening", onListening);
+    })
+    .catch((err) => {
+      console.log(err);
+      process.exit(1);
+    });
+}
 
 function normalizePort(val: string) {
   var port = parseInt(val, 10);

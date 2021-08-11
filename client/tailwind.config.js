@@ -16,6 +16,9 @@ module.exports = {
     },
     extend: {
       colors: {
+        yellow: {
+          primary: "hsla(38, 95%, 51%, 1)",
+        },
         trueGray: colors.trueGray,
         lightBlue: colors.sky,
       },

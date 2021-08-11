@@ -45,7 +45,7 @@ export default function ShoppingListCard({
           </div>
           <div className={labelStyles}>{listState}</div>
           <Button
-            className="p-1 text-yellow-500 rounded-md hover:text-yellow-600/80 active:text-yellow-600 focus:text-yellow-600/80 focus:ring-2 focus:ring-yellow-600/80"
+            className="p-1 rounded-md text-yellow-primary hover:text-yellow-600/80 active:text-yellow-600 focus:text-yellow-600/80 focus:ring-2 focus:ring-yellow-600/80"
             onClick={(e) => {}}
           >
             <ArrowForwardIosIcon />

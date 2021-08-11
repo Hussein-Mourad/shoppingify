@@ -19,7 +19,7 @@ export default function SideBarLink({
       <Link href={path} passHref>
         <a className="relative group">
           {isSelected && (
-            <span className="absolute top-0 left-0 block w-1 h-full bg-yellow-500 xs:w-2 rounded-r-md"></span>
+            <span className="absolute top-0 left-0 block w-1 h-full bg-yellow-primary xs:w-2 rounded-r-md"></span>
           )}
 
           {tooltip && (

@@ -1,8 +1,11 @@
 import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
 import express, { Application } from "express";
 // import createError from "http-errors";
 import logger from "morgan";
 import path from "path";
+
+dotenv.config();
 
 const app: Application = express();
 
@@ -17,7 +20,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res, next) => {
-  res.send("Hello world");
+  res.send("sfgfghfgh");
 });
 
 // app.use("/", require("./routes/index"));

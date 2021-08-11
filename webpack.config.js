@@ -1,7 +1,7 @@
 const path = require("path");
 
 module.exports = {
-  entry: "./src/app.ts",
+  entry: "./src/index.ts",
   module: {
     rules: [
       {
@@ -27,7 +27,7 @@ module.exports = {
       buffer: false,
       url: false,
       string_decoder: false,
-      "querystring": false
+      querystring: false,
     },
   },
   output: {

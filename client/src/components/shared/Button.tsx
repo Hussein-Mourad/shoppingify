@@ -41,7 +41,7 @@ function Button({
 
   const orangeStyles = cn(
     baseStyles,
-    "bg-yellow-500/95 hover:bg-yellow-500/80 active:bg-yellow-600/90 active:text-opacity-90 focus:ring focus:ring-yellow-100"
+    "bg-yellow-primary/95 hover:bg-yellow-primary/80 active:bg-yellow-600/90 active:text-opacity-90 focus:ring focus:ring-yellow-100"
   );
 
   const blueStyles = cn(

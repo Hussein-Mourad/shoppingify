@@ -21,8 +21,8 @@ export default function Layout({ children, sideDrawer }: Props) {
       <SideBar sideDrawerHandler={toggleSideMenu} />
       <main className={contentStyle}>{children}</main>
       {isSideDrawerOpen && (
-        <aside className="w-full h-screen shadow-lg md:right-0 reltaive md:fixed md:top-0 ml-14 sm:ml-20 md:ml-0 md:w-96">
-          {sideDrawer}
+        <aside className="relative h-screen shadow-lg md:right-0 md:fixed md:top-0 ml-14 sm:ml-20 md:ml-0">
+          <div className="w-full h-full md:w-96">{sideDrawer}</div>
         </aside>
       )}
     </div>

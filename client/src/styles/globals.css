@@ -44,7 +44,7 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-yellow-500 rounded-lg;
+  @apply rounded-lg bg-yellow-primary;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -61,7 +61,7 @@ html {
 }
 
 .sidedrawer-scrollbar::-webkit-scrollbar-thumb {
-  @apply bg-yellow-500 rounded-lg;
+  @apply rounded-lg bg-yellow-primary;
 }
 
 .sidedrawer-scrollbar::-webkit-scrollbar-thumb:hover {

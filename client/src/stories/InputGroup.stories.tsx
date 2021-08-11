@@ -1,6 +1,6 @@
 import { Search } from "@material-ui/icons/";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import InputGroup from "components/InputGroup";
+import InputGroup from "components/shared/InputGroup";
 import React from "react";
 
 export default {
@@ -21,5 +21,5 @@ export const Default = Template.bind({});
 Default.args = {
   leftElement: <Search className="mx-2" />,
   inputClassName: "py-5",
-  label:"Name"
+  label: "Name",
 };
