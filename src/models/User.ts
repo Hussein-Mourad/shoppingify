@@ -9,6 +9,7 @@ export interface IUser {
 
 interface UserModel extends Model<IUser> {
   login(username: string, password: string): IUser & Document<any, any, IUser>;
+  isValidUser(_id: string): IUser & Document<any, any, IUser>;
 }
 
 const userSchema = new Schema<IUser, UserModel>(
@@ -51,6 +52,14 @@ userSchema.statics.login = async function (username: string, password: string) {
     }
   }
   throw new Error("Invalid username and/or password");
+};
+
+userSchema.statics.isValidUser = async function (_id: string) {
+  const user = await this.findOne({ _id });
+  if (user) {
+    return user;
+  }
+  throw new Error("User not found");
 };
 
 const User = model("User", userSchema);

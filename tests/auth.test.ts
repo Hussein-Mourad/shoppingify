@@ -202,34 +202,7 @@ describe("/auth/", function () {
   });
 
   describe("POST /", function () {
-
-    it("should be logged in", function (done) {
-      const user = {
-        username: "Hussein",
-        password: "Hussein1234",
-      };
-
-      User.create(user).then(() => {
-        chai
-          .request(app)
-          .post("/auth/login/")
-          .send(user)
-          .end((err, res) => {
-            if (err) return done(err);
-            return chai
-              .request(app)
-              .post("/auth/")
-              .end((err, res) => {
-                if (err) return done(err);
-                res.should.have.status(200);
-                res.body.should.be.a("object");
-                res.body.should.have.property("id");
-                res.body.should.have.property("username").eql("Hussein");
-                done();
-              });
-          });
-      });
-    });
+    it("should be logged in");
 
     it("should not be signed in", function (done) {
       appPost("/auth/", {}, (err, res) => {
