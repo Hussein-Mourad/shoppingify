@@ -6,6 +6,7 @@ const TEN_DAYS_IN_SECONDS = 10 * 24 * 60 * 60;
 const TEN_DAYS_IN_MILLISECONDS = TEN_DAYS_IN_SECONDS * 1000;
 
 async function isAuth(req: Request, res: Response, next: NextFunction) {
+  console.error(req.signedCookies, req.cookies);
   const token = req.signedCookies.jwt;
   if (token) {
     try {

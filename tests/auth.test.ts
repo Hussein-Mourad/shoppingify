@@ -4,12 +4,13 @@ process.env.NODE_ENV = "test";
 import chai from "chai";
 import chaiHttp from "chai-http";
 import app from "../src/index";
+import User from "../src/models/User";
 
 chai.should();
 
 chai.use(chaiHttp);
 
-const testApp = (
+const appPost = (
   route: string,
   data: Object,
   callback: (err: any, res: any) => void
@@ -22,28 +23,21 @@ const testApp = (
 };
 
 describe("/auth/", function () {
-  describe("/POST /signup", function () {
+  beforeEach((done) => {
+    User.deleteMany({}, done);
+  });
+  describe("POST /signup", function () {
     const route = "/auth/signup";
-    // before((done) => {
-    //   User.deleteMany({}, (err) => {
-    //     done();
-    //   });
-    // });
-
-    it("should fail", function () {
-      const a = true;
-      a.should.be.equal(true);
-      a.should.be.equal(false);
-    });
 
     it("should fail to signup no data is provided", function (done) {
-      testApp(
+      appPost(
         route,
         {
           username: "",
           password: "",
         },
         (err, res) => {
+          if (err) return done(err);
           res.should.have.status(401);
           res.body.should.be.a("object");
           res.body.should.have.property("errors");
@@ -53,19 +47,20 @@ describe("/auth/", function () {
           res.body.errors.should.have
             .property("password")
             .eql("Please enter a password");
+          done();
         }
       );
-      done();
     });
 
     it("should fail to signup as password is too short", function (done) {
-      testApp(
+      appPost(
         route,
         {
           username: "Hussein",
           password: "a",
         },
         (err, res) => {
+          if (err) return done(err);
           res.should.have.status(401);
           res.body.should.be.a("object");
           res.body.should.have.property("errors");
@@ -73,19 +68,20 @@ describe("/auth/", function () {
           res.body.errors.should.have
             .property("password")
             .eql("Minimum length is 8 characters");
+          done();
         }
       );
-      done();
     });
 
     it("should fail to signup as password does not contain a number and uppercase", function (done) {
-      testApp(
+      appPost(
         route,
         {
           username: "Hussein",
           password: "randompassword",
         },
         (err, res) => {
+          if (err) return done(err);
           res.should.have.status(401);
           res.body.should.be.a("object");
           res.body.should.have.property("errors");
@@ -95,87 +91,154 @@ describe("/auth/", function () {
             .eql(
               "Password must contain at least one uppercase, and one number"
             );
+          done();
         }
       );
-      done();
     });
 
     it("should signup successfully", function (done) {
-      testApp(
+      appPost(
         route,
         {
           username: "Hussein",
           password: "Hussein1234",
         },
         (err, res) => {
+          if (err) return done(err);
           res.should.have.status(201);
+          res.should.have.cookie("jwt");
           res.body.should.be.a("object");
           res.body.should.have.property("id");
           res.body.should.have.property("username").eql("Hussein");
+          done();
         }
       );
-      done();
     });
 
     it("should fail to signup as user is already taken", function (done) {
-      testApp(
-        route,
-        {
-          username: "Hussein",
-          password: "Hussein1234",
-        },
-        (err, res) => {
+      const user = {
+        username: "Hussein",
+        password: "Hussein1234",
+      };
+      User.create(user).then(() => {
+        appPost(route, user, (err, res) => {
+          if (err) return done(err);
           res.should.have.status(401);
           res.body.should.be.a("object");
           res.body.should.have.property("errors");
           res.body.errors.should.have
             .property("username")
             .eql("Username is already taken.");
-          res.body.errors.should.have
-            .property("error")
-            .eql("Username is already taken.");
-        }
-      );
-      done();
+          res.body.errors.should.have.property("password").eql("");
+          done();
+        });
+      });
     });
   });
 
-  describe("/POST /login", function () {
+  describe("POST /login", function () {
     const route = "/auth/login";
     it("should login successfully", function (done) {
-      testApp(
-        route,
-        {
-          username: "Hussein",
-          password: "Hussein1234",
-        },
-        (err, res) => {
+      const user = {
+        username: "Hussein",
+        password: "Hussein1234",
+      };
+      User.create(user).then(() => {
+        appPost(route, user, (err, res) => {
+          if (err) return done(err);
           res.should.have.status(201);
+          res.should.have.cookie("jwt");
           res.body.should.be.a("object");
           res.body.should.have.property("id");
           res.body.should.have.property("username").eql("Hussein");
-        }
-      );
-      done();
+          done();
+        });
+      });
     });
 
     it("should fail to login", function (done) {
-      testApp(
+      appPost(
         route,
         {
-          username: "Hussein",
-          password: "Hussein1234",
+          username: "Hussein34",
+          password: "Hussein124434",
         },
         (err, res) => {
+          if (err) return done(err);
           res.should.have.status(401);
           res.body.should.be.a("object");
           res.body.should.have.property("errors");
           res.body.errors.should.have
             .property("error")
             .eql("Invalid username and/or password");
+          done();
         }
       );
-      done();
+    });
+  });
+
+  describe("POST /logout", function () {
+    it("should logout", function (done) {
+      const user = {
+        username: "Hussein",
+        password: "Hussein1234",
+      };
+      User.create(user).then(() => {
+        appPost("/auth/login", user, (err, res) => {
+          if (err) return done(err);
+          return chai
+            .request(app)
+            .post("/auth/logout")
+            .end((err, res) => {
+              if (err) return done(err);
+              res.should.have.status(200);
+              res.should.not.have.cookie("jwt");
+              res.body.should.be.eql("Logout successfully");
+              done();
+            });
+        });
+      });
+    });
+  });
+
+  describe("POST /", function () {
+
+    it("should be logged in", function (done) {
+      const user = {
+        username: "Hussein",
+        password: "Hussein1234",
+      };
+
+      User.create(user).then(() => {
+        chai
+          .request(app)
+          .post("/auth/login/")
+          .send(user)
+          .end((err, res) => {
+            if (err) return done(err);
+            return chai
+              .request(app)
+              .post("/auth/")
+              .end((err, res) => {
+                if (err) return done(err);
+                res.should.have.status(200);
+                res.body.should.be.a("object");
+                res.body.should.have.property("id");
+                res.body.should.have.property("username").eql("Hussein");
+                done();
+              });
+          });
+      });
+    });
+
+    it("should not be signed in", function (done) {
+      appPost("/auth/", {}, (err, res) => {
+        if (err) return done(err);
+        res.should.have.status(401);
+        res.body.should.be.a("object");
+        res.body.should.have.property("user").eql(null);
+        done();
+      });
     });
   });
 });
