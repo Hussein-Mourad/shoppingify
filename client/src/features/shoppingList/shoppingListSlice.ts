@@ -1,37 +1,31 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AppState } from "app/store";
 
-export interface ShoppingListState {
-  categories: Category[];
-}
-
-interface Item {
+export interface Item {
   name: string;
   quantity: number;
   category: string;
   completed: boolean;
 }
 
-interface Category {
+export interface Category {
   name: string;
   items: Item[];
 }
 
-const initialState: ShoppingListState = {
-  categories: [
-    {
-      name: "Fruits and vegetables",
-      items: [
-        {
-          name: "Avocado",
-          quantity: 1,
-          category: "Fruits and vegetables",
-          completed: false,
-        },
-      ],
-    },
-  ],
-};
+const initialState: Category[] = [
+  {
+    name: "Fruits and vegetables",
+    items: [
+      {
+        name: "Avocado",
+        quantity: 1,
+        category: "Fruits and vegetables",
+        completed: false,
+      },
+    ],
+  },
+];
 
 export const shoppingListSlice = createSlice({
   name: "shoppingList",
@@ -40,9 +34,8 @@ export const shoppingListSlice = createSlice({
 });
 
 // export const getCategories = state;
-export const selectCategories = (state: AppState) =>
-  state.shoppingList.categories;
-  
+export const selectCategories = (state: AppState) => state.shoppingList;
+
 export default shoppingListSlice.reducer;
 
 // const [showCheckBoxes, setShowCheckBoxes] = useState(false);

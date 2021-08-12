@@ -6,8 +6,8 @@ interface Props {}
 
 function Header(props: Props): ReactElement {
   return (
-    <header className="flex flex-col items-center w-full md:flex-row">
-      <h1 className="flex-1 mb-3 text-2xl font-semibold text-trueGray-800 sm:mb-0">
+    <header className="flex items-center w-full">
+      <h1 className="flex-1 hidden mb-3 text-2xl font-semibold text-trueGray-800 sm:mb-0 md:block">
         <span className="text-yellow-primary">Shoppingify</span> allows you take
         your shopping llist wherever you go
       </h1>

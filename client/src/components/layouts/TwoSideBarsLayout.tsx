@@ -1,6 +1,5 @@
 import cn from "classnames";
-import React, { useEffect, useState } from "react";
-import useWindowDimensions from "../../hooks/useWindowDimensions";
+import React, { useState } from "react";
 import SideBar from "../SideBar";
 
 type Props = {
@@ -10,24 +9,21 @@ type Props = {
 
 export default function Layout({ children, sideDrawer }: Props) {
   const [isSideDrawerOpen, setIsSideDrawerOpen] = useState(false);
-  const windowDimensions = useWindowDimensions();
+  // const windowDimensions = useWindowDimensions();
 
-  useEffect(() => {
-    if (windowDimensions.width >= 768) {
-      setIsSideDrawerOpen(true);
-    }
-    return () => {};
-  }, [windowDimensions]);
+  // useEffect(() => {
+  //   if (windowDimensions.width >= 768) {
+  //     setIsSideDrawerOpen(true);
+  //   }
+  //   return () => {};
+  // }, [windowDimensions]);
 
   const toggleSideMenu = () => {
-    if (window && window.innerWidth < 768) {
-      setIsSideDrawerOpen(!isSideDrawerOpen);
-    } else {
-      setIsSideDrawerOpen(true);
-    }
+    setIsSideDrawerOpen(!isSideDrawerOpen);
   };
-  const contentStyle = cn("ml-14 sm:ml-20 px-5 bg-gray-50 md:mr-96", {
-    "hidden md:block": isSideDrawerOpen,
+
+  const contentStyle = cn("ml-14 sm:ml-20 px-5 bg-gray-50", {
+    "hidden md:block md:mr-96": isSideDrawerOpen,
   });
 
   return (

@@ -1,6 +1,6 @@
 import CategoryGrid from "components/CategoryGrid";
 import Header from "components/Header";
-import Layout from "components/shared/Layout";
+import TwoSideBarsLayout from "components/layouts/TwoSideBarsLayout";
 import ItemCard from "features/shoppingList/ItemCard";
 import ShoppingList from "features/shoppingList/ShoppingList";
 import Head from "next/head";
@@ -14,7 +14,7 @@ export default function Home() {
         <link rel="icon" href={"/img/favicon.ico"} />
       </Head>
 
-      <Layout sideDrawer={<ShoppingList />}>
+      <TwoSideBarsLayout sideDrawer={<ShoppingList />}>
         <div className="min-h-screen p-2 sm:p-4 md:p-6">
           <Header />
           <div className="mt-4 sm:mt-6 md:mt-8">
@@ -41,7 +41,7 @@ export default function Home() {
             </CategoryGrid>
           </div>
         </div>
-      </Layout>
+      </TwoSideBarsLayout>
     </div>
   );
 }

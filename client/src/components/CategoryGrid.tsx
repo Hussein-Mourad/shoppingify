@@ -15,7 +15,9 @@ export default function CategoryGrid({
   return (
     <div className={className}>
       <h3 className="text-lg font-medium">{name}</h3>
-      <Grid>{children}</Grid>
+      <Grid>
+        {children}
+      </Grid>
     </div>
   );
 }

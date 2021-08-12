@@ -10,11 +10,13 @@ import Badge from "./shared/Badge";
 import Button from "./shared/Button";
 import SideBarLink from "./SideBarLink";
 
-type SideBarProps = {
+interface SideBarProps {
+  shoppingListButtonDisabled?: boolean;
   sideDrawerHandler: () => void;
-};
+}
 
 export default function SideBar({
+  shoppingListButtonDisabled = false,
   sideDrawerHandler,
 }: SideBarProps): JSX.Element {
   const { asPath } = useRouter();
@@ -50,6 +52,7 @@ export default function SideBar({
         className="relative w-12 h-12 text-white rounded-full sm:h-14 sm:w-14 focus-visible:ring-2 focus-visible:ring-black/90 focus-visible:ring-offset-2 "
         onClick={sideDrawerHandler}
         color="orange"
+        disabled={shoppingListButtonDisabled}
       >
         <Badge number={1} />
         <span className="sm:hidden">

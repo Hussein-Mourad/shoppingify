@@ -1,6 +1,6 @@
 import { compare, genSalt, hash } from "bcrypt";
-import { Model, model, Schema } from "mongoose";
-import isStrongPassword from "validator/es/lib/isStrongPassword";
+import { Document, Model, model, Schema } from "mongoose";
+import isStrongPassword from "validator/lib/isStrongPassword";
 
 export interface IUser {
   username: string;
@@ -8,7 +8,7 @@ export interface IUser {
 }
 
 interface UserModel extends Model<IUser> {
-  login(): IUser;
+  login(username: string, password: string): IUser & Document<any, any, IUser>;
 }
 
 const userSchema = new Schema<IUser, UserModel>(
@@ -42,7 +42,7 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.statics.login = async function (username, password) {
+userSchema.statics.login = async function (username: string, password: string) {
   const user = await this.findOne({ username });
   if (user) {
     const auth = await compare(password, user.password);
@@ -50,7 +50,7 @@ userSchema.statics.login = async function (username, password) {
       return user;
     }
   }
-  throw new Error("Incorrect username and/or password");
+  throw new Error("Invalid username and/or password");
 };
 
 const User = model("User", userSchema);
