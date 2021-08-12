@@ -4,7 +4,7 @@ import Product, {IProduct} from "../models/Product";
 
 function create(req: Request, res: Response, next: NextFunction) {
   const {id, name, imageUrl, description, category} = req.body;
-
+  console.log(req.body)
 }
 
 
@@ -28,5 +28,5 @@ function handleModelErrors(err: { message: string; code: number; errors: any }) 
 }
 
 
-export default {};
+export default {create};
 
