@@ -8,7 +8,7 @@ export interface IProduct {
   category: Schema.Types.ObjectId;
 }
 
-const productSchema = new Schema<IProduct>(
+export const productSchema = new Schema<IProduct>(
   {
     user: {
       type: Schema.Types.ObjectId,

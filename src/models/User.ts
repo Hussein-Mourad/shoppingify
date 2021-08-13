@@ -12,7 +12,7 @@ interface UserModel extends Model<IUser> {
   isValidUser(_id: string): IUser & Document<any, any, IUser>;
 }
 
-const userSchema = new Schema<IUser, UserModel>(
+export const userSchema = new Schema<IUser, UserModel>(
   {
     username: {
       type: String,

@@ -7,7 +7,9 @@ import session from "express-session";
 import logger from "morgan";
 import path from "path";
 import connectDB from "./config/db";
+
 import authRouter from "./routes/auth";
+import productRouter from "./routes/product"
 
 dotenv.config();
 
@@ -42,6 +44,7 @@ app.use(
 );
 
 app.use("/auth/", authRouter);
+app.use("/products/", productRouter)
 
 // app.use("/", require("./routes/index"));
 // app.use("/users", require("./routes/users"));

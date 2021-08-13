@@ -1,16 +1,38 @@
+import { NextFunction, Request, Response } from "express";
+import { CallbackError } from "mongoose";
+import Category from "../models/Category";
+import Product from "../models/Product";
+import User from "../models/User";
 
-import { NextFunction, Request, Response } from "express"
-import Product, {IProduct} from "../models/Product";
-
-function create(req: Request, res: Response, next: NextFunction) {
-  const {id, name, imageUrl, description, category} = req.body;
-  console.log(req.body)
+async function createProduct(req: Request, res: Response, next: NextFunction) {
+  const { id, name, imageUrl, description, categoryId } = req.body;
+  try {
+    const user = await User.isValidUser(id);
+    const category = await Category.isValidCategory(categoryId, id);
+    res.json(user);
+  } catch (err) {
+    res.json({ user: null });
+  }
 }
 
+async function deleteProduct(req: Request, res: Response, next: NextFunction) {
+  const { id } = req.params;
 
+  Product.deleteOne({ _id: id }, (err: CallbackError) => {
+    if (!err) {
+      res.json("Product deleted successfully.");
+    } else {
+      res.status(400).json("Error deleting the product");
+    }
+  });
+}
 
-function handleModelErrors(err: { message: string; code: number; errors: any }) {
-  let errors:any;
+function handleModelErrors(err: {
+  message: string;
+  code: number;
+  errors: any;
+}) {
+  let errors: any;
 
   if (err.message === "Invalid username and/or password") {
     errors.error = err.message;
@@ -27,6 +49,4 @@ function handleModelErrors(err: { message: string; code: number; errors: any }) 
   return { errors };
 }
 
-
-export default {create};
-
+export default { createProduct, deleteProduct };
