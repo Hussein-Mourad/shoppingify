@@ -8,7 +8,7 @@ async function createProduct(req: Request, res: Response, next: NextFunction) {
   const { id, name, imageUrl, description, categoryId } = req.body;
   try {
     const user = await User.isValidUser(id);
-    const category = await Category.isValidCategory(categoryId, id);
+    // const category = await Category.isValidCategory(categoryId, id);
     res.json(user);
   } catch (err) {
     res.json({ user: null });

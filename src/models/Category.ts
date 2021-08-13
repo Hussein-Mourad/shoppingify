@@ -6,7 +6,7 @@ export interface ICategory {
 }
 
 interface CategoryModel extends Model<ICategory> {
-  isValidCategory(_id: string, userId:string): ICategory & Document<any, any, IUser>;
+  // isValidCategory(_id: string, userId:string): ICategory & Document<any, any, IUser>;
 }
 
 export const categorySchema = new Schema<ICategory, CategoryModel>(
@@ -26,16 +26,16 @@ export const categorySchema = new Schema<ICategory, CategoryModel>(
   { timestamps: true }
 );
 
-categorySchema.statics.isValidCategory = async function (
-  _id: string,
-  userId: string
-) {
-  const category = await this.findOne({ _id, user: userId });
-  if (category) {
-    return category;
-  }
-  throw new Error("Category not found");
-};
+// categorySchema.statics.isValidCategory = async function (
+//   _id: string,
+//   userId: string
+// ) {
+//   const category = await this.findOne({ _id, user: userId });
+//   if (category) {
+//     return category;
+//   }
+//   throw new Error("Category not found");
+// };
 const Category = model("Product", categorySchema);
 
 export default Category;
