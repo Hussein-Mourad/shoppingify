@@ -1,4 +1,4 @@
-import { model, Model, Schema, Document } from "mongoose";
+import { Document, model, Model, Schema } from "mongoose";
 
 export interface ICategory {
   user: Schema.Types.ObjectId;
@@ -6,12 +6,15 @@ export interface ICategory {
 }
 
 interface CategoryModel extends Model<ICategory> {
-  // isValidCategory(_id: string, userId:string): ICategory & Document<any, any, IUser>;
+  checkUserCategory(
+    _id: string,
+    userId: string
+  ): ICategory & Document<any, any, ICategory>;
 }
 
 export const categorySchema = new Schema<ICategory, CategoryModel>(
   {
-    user: {
+    userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: [true, "User id is required"],
@@ -26,16 +29,17 @@ export const categorySchema = new Schema<ICategory, CategoryModel>(
   { timestamps: true }
 );
 
-// categorySchema.statics.isValidCategory = async function (
-//   _id: string,
-//   userId: string
-// ) {
-//   const category = await this.findOne({ _id, user: userId });
-//   if (category) {
-//     return category;
-//   }
-//   throw new Error("Category not found");
-// };
-const Category = model("Product", categorySchema);
+categorySchema.statics.checkUserCategory = async function (
+  _id: string,
+  userId: string
+) {
+  const category = await this.findOne({ _id, userId });
+  if (category) {
+    return category;
+  }
+  throw new Error("Category is not found");
+};
+
+const Category = model("Category", categorySchema);
 
 export default Category;

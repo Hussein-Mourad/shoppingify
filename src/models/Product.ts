@@ -10,16 +10,16 @@ export interface IProduct {
 
 export const productSchema = new Schema<IProduct>(
   {
-    user: {
+    userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required:[true, "User id is required"]
+      required: [true, "User id is required"],
     },
     name: {
       type: String,
       required: [true, "Please enter a name"],
       trim: true,
-      maxLength:[30, "Max Length is 30 characters"]
+      maxLength: [30, "Max Length is 30 characters"],
     },
     imageUrl: {
       type: String,
@@ -28,12 +28,12 @@ export const productSchema = new Schema<IProduct>(
     description: {
       type: String,
       trim: true,
-      maxLength:[300,"Max Length is 300 characters"]
+      maxLength: [300, "Max Length is 300 characters"],
     },
-    category: {
+    categoryId: {
       type: Schema.Types.ObjectId,
       ref: "Category",
-      required:[true, "Category is required"]
+      required: [true, "Category id is required"],
     },
   },
   { timestamps: true }

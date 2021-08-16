@@ -1,11 +1,11 @@
 import { Router } from "express";
 import controller from "../controllers/product";
+import authRequired from "../middlewares/authRequired";
 const router = Router();
 
-router.post("/", controller.createProduct);
-router.delete("/:id",controller.deleteProduct)
+router.post("/", authRequired, controller.createProduct);
+router.get("/", authRequired, controller.findAllUserProducts);
+router.get("/:id", authRequired, controller.findProductById);
+router.delete("/:id", authRequired, controller.deleteProduct);
 
-// router.post("/login", controller.login);
-// router.post("/signup", controller.signup);
-// router.post("/logout", controller.logout);
 export default router;

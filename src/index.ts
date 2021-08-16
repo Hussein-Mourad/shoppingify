@@ -7,9 +7,10 @@ import session from "express-session";
 import logger from "morgan";
 import path from "path";
 import connectDB from "./config/db";
-
+import authRequired from "./middlewares/authRequired";
 import authRouter from "./routes/auth";
-import productRouter from "./routes/product"
+import productRouter from "./routes/product";
+// import categoryRouter from "./routes/category";
 
 dotenv.config();
 
@@ -43,8 +44,16 @@ app.use(
   })
 );
 
+app.get("/", authRequired, (req, res) => {
+  res.send("hi from home page");
+});
+
+app.get("/login", (req, res) => {
+  res.send("hi from login page");
+});
+
 app.use("/auth/", authRouter);
-app.use("/products/", productRouter)
+app.use("/products/", productRouter);
 
 // app.use("/", require("./routes/index"));
 // app.use("/users", require("./routes/users"));

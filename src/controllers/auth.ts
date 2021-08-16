@@ -1,11 +1,11 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import User from "../models/User";
 
 const TEN_DAYS_IN_SECONDS = 10 * 24 * 60 * 60;
 const TEN_DAYS_IN_MILLISECONDS = TEN_DAYS_IN_SECONDS * 1000;
 
-async function isAuth(req: Request, res: Response, next: NextFunction) {
+async function isAuth(req: Request, res: Response) {
   const token = req.signedCookies.jwt;
   if (token) {
     try {
@@ -30,7 +30,7 @@ async function isAuth(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-async function login(req: Request, res: Response, next: NextFunction) {
+async function login(req: Request, res: Response) {
   const { username, password } = req.body;
 
   try {
@@ -53,7 +53,7 @@ async function login(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-async function signup(req: Request, res: Response, next: NextFunction) {
+async function signup(req: Request, res: Response) {
   const { username, password } = req.body;
 
   try {
@@ -76,7 +76,7 @@ async function signup(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-function logout(req: Request, res: Response, next: NextFunction) {
+function logout(req: Request, res: Response) {
   res.cookie("jwt", "", { maxAge: 1 });
   res.json("Logout successfully");
   // res.redirect("/");
