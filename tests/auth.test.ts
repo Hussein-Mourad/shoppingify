@@ -1,6 +1,3 @@
-process.env.NODE_ENV = "test";
-// process.env.DB_URI = process.env.DB_TEST_URI;
-
 import chai from "chai";
 import chaiHttp from "chai-http";
 import app from "../src/index";

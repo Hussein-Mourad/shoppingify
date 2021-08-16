@@ -9,7 +9,7 @@ interface CategoryModel extends Model<ICategory> {
   checkUserCategory(
     _id: string,
     userId: string
-  ): ICategory & Document<any, any, ICategory>;
+  ): Promise<ICategory & Document<any, any, ICategory>>;
 }
 
 export const categorySchema = new Schema<ICategory, CategoryModel>(

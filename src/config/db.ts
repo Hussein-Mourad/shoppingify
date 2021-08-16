@@ -12,7 +12,6 @@ export default function connectDB(cb: () => void) {
         cb();
       })
       .catch((err) => {
-        // console.log(err);
         process.exit(1);
       });
   } else {

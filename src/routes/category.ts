@@ -1,10 +1,10 @@
 import { Router } from "express";
-import controller from "../controllers/product";
+import controller from "../controllers/category";
 const router = Router();
+import authRequired from "../middlewares/authRequired";
 
-router.post("/", controller.createProduct);
-router.get("/", controller.findAllUserProducts);
-router.get("/:id", controller.findProductById);
-router.delete("/:id", controller.deleteProduct);
+router.post("/", authRequired, controller.createCategory);
+router.get("/", authRequired, controller.findAllUserCategories);
+router.get("/:id", authRequired, controller.findCategoryById);
 
 export default router;

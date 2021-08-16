@@ -88,7 +88,7 @@ function createToken(id: string) {
   });
 }
 
-function handleErrors(err: { message: string; code: number; errors: any }) {
+function handleErrors(err: { message: string; code: number; errors: any, keyPattern:any }) {
   let errors = { username: "", password: "", error: "" };
 
   if (err.message === "Invalid username and/or password") {

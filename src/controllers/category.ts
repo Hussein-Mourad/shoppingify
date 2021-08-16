@@ -1,64 +1,47 @@
 import { Request, Response } from "express";
-import { CallbackError } from "mongoose";
 import Category from "../models/Category";
-import Product from "../models/Product";
 
-async function createProduct(req: Request, res: Response) {
-  const { userId, name, imageUrl, description, categoryId } = req.body;
+async function createCategory(req: Request, res: Response) {
+  const { name } = req.body;
+  const userId = res.locals.user?._id;
+
   try {
-    await Category.checkUserCategory(categoryId, userId);
-    const product = await Product.create({
+    const category = await Category.create({
       userId,
       name,
-      imageUrl,
-      description,
-      categoryId,
     });
 
-    res.json({ product });
+    res.json({ category });
   } catch (err) {
     res.status(400).json(handleErrors(err));
   }
 }
 
-async function findAllUserProducts(req: Request, res: Response) {
-  const { userId } = req.body;
+async function findAllUserCategories(req: Request, res: Response) {
+  const userId = res.locals.user?._id;
   try {
-    const products = await Product.find({ userId });
-    res.json({ products });
+    const categories = await Category.find({ userId });
+    res.json({ categories });
   } catch (err) {
-    res.status(400).json({ products: null });
+    res.status(400).json({ categories: null });
   }
 }
 
-async function findProductById(req: Request, res: Response) {
+async function findCategoryById(req: Request, res: Response) {
   const { id } = req.params;
-  const { userId } = req.body;
+  const userId = res.locals.user?._id;
+
   try {
-    const product = await Product.findOne({ _id: id, userId });
-    res.json({ product });
+    const category = await Category.findOne({ _id: id, userId });
+    res.json({ category });
   } catch (err) {
-    res.status(400).json({ product: null });
+    res.status(400).json({ category: null });
   }
-}
-
-async function deleteProduct(req: Request, res: Response) {
-  const { id } = req.params;
-  const { userId } = req.body;
-
-  Product.deleteOne({ _id: id, userId }, (err: CallbackError) => {
-    if (!err) {
-      res.json("Product deleted successfully.");
-    } else {
-      res.status(400).json("Error deleting the product");
-    }
-  });
 }
 
 function handleErrors(err: { message: string; code: number; errors: any }) {
   let errors: any = {};
-
-  errors.message = err.message;
+  
   if (err.errors) {
     Object.values(err.errors).forEach((value: any) => {
       errors[value.properties.path] = value.properties.message;
@@ -69,8 +52,7 @@ function handleErrors(err: { message: string; code: number; errors: any }) {
 }
 
 export default {
-  createProduct,
-  findAllUserProducts,
-  findProductById,
-  deleteProduct,
+  createCategory,
+  findAllUserCategories,
+  findCategoryById,
 };
