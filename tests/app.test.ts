@@ -1,11 +1,8 @@
-import chai from "chai";
-import chaiHttp from "chai-http";
-import app from "../src/index";
+import { beforeEach } from "mocha";
+import Category from "../src/models/Category";
+import Product from "../src/models/Product";
 import User from "../src/models/User";
-
-chai.should();
-
-chai.use(chaiHttp);
+import chai, { app } from "./common";
 
 const appPost = (
   route: string,
@@ -18,6 +15,28 @@ const appPost = (
     .send(data)
     .end((err, res) => callback(err, res));
 };
+
+function withUserLoggedIn(
+  route: string,
+  data: Object,
+  callback: (err: any, res: any) => void
+) {
+  const user = { username: "Hussein", password: "Hussein12345" };
+
+  User.create(user).then(() => {
+    chai
+      .request(app)
+      .post("/login/")
+      .send(user)
+      .end((err, res) => {
+        chai
+          .request(app)
+          .post(route)
+          .send(data)
+          .end((err, res) => callback(err, res));
+      });
+  });
+}
 
 describe("/auth/", function () {
   beforeEach((done) => {
@@ -207,6 +226,38 @@ describe("/auth/", function () {
         res.should.have.status(401);
         res.body.should.be.a("object");
         res.body.should.have.property("user").eql(null);
+        done();
+      });
+    });
+  });
+});
+
+describe("/categories/", function () {
+  beforeEach((done) => {
+    User.deleteMany({}, () => {});
+    Category.deleteMany({}, () => {});
+    Product.deleteMany({}, () => {});
+    done();
+  });
+  describe("POST /", function () {
+    const route = "/categories/";
+
+    it("should add a category", function (done) {
+      // chai
+      //   .request(app)
+      //   .post("/categories/")
+      //   .send({ name: "Fruits and vegetables" })
+      //   .end((err, res) => {
+      //     if (err) return done(err);
+      //     res.should.have.status(401);
+      //     done();
+      //   });
+      withUserLoggedIn(route, { name: "Fruits and vegetables" }, (err, res) => {
+        if (err) return done(err);
+        res.should.have.status(200);
+        res.body.should.be.a("object");
+        res.body.should.have.property("userId");
+        res.body.should.have.property("name").eql("Fruits and vegetables");
         done();
       });
     });

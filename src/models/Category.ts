@@ -1,7 +1,8 @@
-import { Document, model, Model, Schema } from "mongoose";
+import { Document, model, Model, Schema, PopulatedDoc } from "mongoose";
+import { IUser } from "./User";
 
 export interface ICategory {
-  user: Schema.Types.ObjectId;
+  userId: PopulatedDoc<IUser & Document>;
   name: string;
 }
 
@@ -12,7 +13,7 @@ interface CategoryModel extends Model<ICategory> {
   ): Promise<ICategory & Document<any, any, ICategory>>;
 }
 
-export const categorySchema = new Schema<ICategory, CategoryModel>(
+export const categorySchema = new Schema<ICategory, CategoryModel, ICategory>(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -33,7 +34,10 @@ categorySchema.statics.checkUserCategory = async function (
   _id: string,
   userId: string
 ) {
-  const category = await this.findOne({ _id, userId });
+  const category = await this.findOne({
+    _id,
+    userId,
+  });
   if (category) {
     return category;
   }

@@ -10,6 +10,7 @@ import connectDB from "./config/db";
 import authRouter from "./routes/auth";
 import productRouter from "./routes/product";
 import categoryRouter from "./routes/category";
+import shoppingListRouter from "./routes/shoppingList"
 
 dotenv.config();
 
@@ -46,7 +47,7 @@ app.use(
 app.use("/auth/", authRouter);
 app.use("/products/", productRouter);
 app.use("/categories/", categoryRouter);
-
+app.use("/shoppinglist/", shoppingListRouter);
 
 // // catch 404 and forward to error handler
 // app.use(function (req, res, next) {

@@ -7,14 +7,12 @@ export interface IUser {
   password: string;
 }
 
-export type TUser = IUser & Document;
-
 export interface UserModel extends Model<IUser> {
   login(username: string, password: string): IUser & Document<any, any, IUser>;
   isValidUser(_id: string): IUser & Document<any, any, IUser>;
 }
 
-export const userSchema = new Schema<IUser, UserModel>(
+export const userSchema = new Schema<IUser, UserModel, IUser>(
   {
     username: {
       type: String,

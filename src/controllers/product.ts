@@ -1,56 +1,62 @@
 import { Request, Response } from "express";
 import { CallbackError } from "mongoose";
-import Product from "../models/Product";
-import { TUser } from "../models/User";
 import Category from "../models/Category";
+import Product from "../models/Product";
 
-interface IResponseWithUser extends Response {
-  locals: { user: TUser | null };
-}
-
-async function createProduct(req: Request, res: IResponseWithUser) {
+async function createProduct(req: Request, res: Response) {
   const userId = res.locals.user?._id;
 
   const { name, imageUrl, description, categoryId } = req.body;
   try {
-    await Category.checkUserCategory(categoryId, userId);
+    const category = await Category.checkUserCategory(categoryId, userId);
     const product = await Product.create({
       userId,
       name,
       imageUrl,
       description,
-      categoryId,
+      category: categoryId,
     });
-    res.json({ product });
+
+    res.json({ product: { ...product, category } });
   } catch (err) {
+    console.error(err);
     res.status(400).json(handleErrors(err));
   }
 }
 
-async function findAllUserProducts(req: Request, res: IResponseWithUser) {
+async function findUserProducts(req: Request, res: Response) {
   const userId = res.locals.user?._id;
+  const name = req.query.name || "";
 
   try {
-    const products = await Product.find({ userId });
+    const products = await Product.find({
+      name: { $regex: name, $options: "i" },
+      userId,
+    })
+      .populate("category")
+      .exec();
     res.json({ products });
   } catch (err) {
     res.status(400).json({ products: null });
   }
 }
 
-async function findProductById(req: Request, res: IResponseWithUser) {
+async function findProductById(req: Request, res: Response) {
   const { id } = req.params;
   const userId = res.locals.user?._id;
 
   try {
-    const product = await Product.findOne({ _id: id, userId });
+    const product = await Product.find({ _id: id, userId })
+      .populate("category")
+      .exec();
+
     res.json({ product });
   } catch (err) {
     res.status(400).json({ product: null });
   }
 }
 
-async function deleteProduct(req: Request, res: IResponseWithUser) {
+async function deleteProduct(req: Request, res: Response) {
   const { id } = req.params;
   const userId = res.locals.user?._id;
 
@@ -81,7 +87,7 @@ function handleErrors(err: { message: string; code: number; errors: any }) {
 
 export default {
   createProduct,
-  findAllUserProducts,
+  findUserProducts,
   findProductById,
   deleteProduct,
 };

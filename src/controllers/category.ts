@@ -41,7 +41,7 @@ async function findCategoryById(req: Request, res: Response) {
 
 function handleErrors(err: { message: string; code: number; errors: any }) {
   let errors: any = {};
-  
+
   if (err.errors) {
     Object.values(err.errors).forEach((value: any) => {
       errors[value.properties.path] = value.properties.message;

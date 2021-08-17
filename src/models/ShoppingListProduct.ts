@@ -1,16 +1,13 @@
 import { Document, model, PopulatedDoc, Schema } from "mongoose";
 import { ICategory } from "./Category";
+import {IProduct} from "./Product"
 import isValidImageUrl from "../utils/isValidImageUrl"
 
-export interface IProduct {
-  userId: Schema.Types.ObjectId;
-  name: string;
-  imageUrl?: string;
-  description?: string;
-  category: PopulatedDoc<ICategory & Document>;
+export interface IShoppingListProduct extends IProduct{
+ quantity: number
 }
 
-export const productSchema = new Schema<IProduct>(
+export const productSchema = new Schema<IShoppingListProduct>(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -45,7 +42,7 @@ export const productSchema = new Schema<IProduct>(
       required: [true, "Category id is required"],
     },
   },
-  { timestamps: true, discriminatorKey:"kind" }
+  { timestamps: true }
 );
 
 

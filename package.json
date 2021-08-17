@@ -11,9 +11,10 @@
     "build": "tsc -p .",
     "webpack": "webpack",
     "dev": "kill-port 8000 3000;npm-run-all --parallel dev:server dev:client",
+    "dev:fast": "kill-port 8000; npm-run-all build; nodemon ./dist/index.js",
     "dev:server": "kill-port 8000; DEBUG=shoppingify:* nodemon ./src/index.ts",
     "dev:client": "kill-port 3000; npm run dev --prefix client",
-    "test": "kill-port 8000; $npm_package_config_dbtest; env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }'; mocha --timeout 5000 -r ts-node/register 'tests/**/*.ts'"
+    "test": "kill-port 8000; $npm_package_config_dbtest; env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }'; mocha --exit --timeout 5000 -r ts-node/register 'tests/*.ts'"
   },
   "config": {
     "dbtest": "env NODE_ENV=test DB_URI=mongodb://127.0.0.1:27017/local-testing?directConnection=true&serverSelectionTimeoutMS=2000&retryWrites=true;"
@@ -45,6 +46,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.6",
     "morgan": "~1.9.1",
+    "request": "^2.88.2",
     "validator": "^13.6.0"
   },
   "devDependencies": {
@@ -59,6 +61,7 @@
     "@types/mocha": "^9.0.0",
     "@types/morgan": "^1.9.3",
     "@types/node": "^16.4.13",
+    "@types/request": "^2.48.7",
     "@types/validator": "^13.6.3",
     "chai": "^4.3.4",
     "chai-http": "^4.3.0",

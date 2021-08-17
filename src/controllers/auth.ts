@@ -88,18 +88,22 @@ function createToken(id: string) {
   });
 }
 
-function handleErrors(err: { message: string; code: number; errors: any, keyPattern:any }) {
-  let errors = { username: "", password: "", error: "" };
+function handleErrors(err: {
+  message: string;
+  code: number;
+  errors: any;
+  keyPattern: any;
+}) {
+  let errors:any = { username: "", password: "", message: "" };
 
   if (err.message === "Invalid username and/or password") {
-    errors.error = err.message;
+    errors.message = err.message;
   }
   if (err.code == 11000) {
     errors.username = "Username is already taken.";
   }
   if (err.message.toLowerCase().includes("user validation failed")) {
     Object.values(err.errors).forEach((value: any) => {
-      //@ts-ignore
       errors[value.properties.path] = value.properties.message;
     });
   }
