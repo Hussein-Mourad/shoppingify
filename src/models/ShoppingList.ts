@@ -1,11 +1,16 @@
 import { Document, model, PopulatedDoc, Schema } from "mongoose";
-import { IProduct } from "./Product";
+import { ICategory } from "./Category";
 
 interface IShoppingList {
   userId: Schema.Types.ObjectId;
   name: string;
   status: "cancelled" | "completed" | "current";
-  products: PopulatedDoc<IProduct & Document>[];
+  products: {
+    _id: Schema.Types.ObjectId;
+    name: String;
+    quantity: Number;
+    category: PopulatedDoc<ICategory & Document>[];
+  };
 }
 
 const shoppingListSchema = new Schema<IShoppingList>(
@@ -24,17 +29,16 @@ const shoppingListSchema = new Schema<IShoppingList>(
       type: String,
       default: "current",
       required: [true, "Please enter a status."],
-      validate: [
-        (str: string) => {
-          return ["cancelled", "completed", "current"].includes(str);
-        },
-        "Please enter a valid status: cancelled or completed or current",
-      ],
+      enum: ["current", "cancelled", "completed"],
     },
-    products: {
-      type: [Schema.Types.ObjectId],
-      ref: "Product",
-    },
+    products: [
+      {
+        _id: Schema.Types.ObjectId,
+        name: String,
+        quantity: { type: Number, default: 0 },
+        category: { type: Schema.Types.ObjectId, ref: "Category" },
+      },
+    ],
   },
   { timestamps: true }
 );

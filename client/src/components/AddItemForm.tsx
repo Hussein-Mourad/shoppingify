@@ -31,14 +31,14 @@ const validate = async (values: FormValues) => {
   return errors;
 };
 
-function AddItemForm({ className }: AddItemFormProps): ReactElement {
-  const initialValues: FormValues = {
-    name: "",
-    note: "",
-    image: "",
-    category: "",
-  };
+const initialValues: FormValues = {
+  name: "",
+  note: "",
+  image: "",
+  category: "",
+};
 
+function AddItemForm({ className }: AddItemFormProps): ReactElement {
   const formik = useFormik({
     initialValues: { ...initialValues },
     validate,

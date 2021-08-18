@@ -13,6 +13,7 @@ function Header(props: Props): ReactElement {
       </h1>
       <div className="w-full mt-3 md:mt-0 md:w-96 md:ml-3">
         <InputGroup
+          type="search"
           className="border-2 shadow-sm hover:border-gray-600 focus-within:border-gray-600 focus-within:shadow-md group"
           inputClassName="py-3 placeholder-gray-400 group-hover:placeholder-gray-600 group-focus-within:placeholder-gray-600"
           leftElement={

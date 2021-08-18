@@ -1,12 +1,43 @@
 import cn from "classnames";
 
-type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   inputClassName?: string;
   parentClassName?: string;
   leftElement?: React.ReactNode;
   rightElement?: React.ReactNode;
+  rounded?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
+}
+
+const roundedClasses = {
+  sm: "rounded-sm",
+  md: "rounded-md",
+  lg: "rounded-lg",
+  xl: "rounded-xl",
+  "2xl": "rounded-2xl",
+  "3xl": "rounded-3xl",
+  full: "rounded-full",
+};
+
+const roundedLeftClasses = {
+  sm: "rounded-l-sm",
+  md: "rounded-l-md",
+  lg: "rounded-l-lg",
+  xl: "rounded-l-xl",
+  "2xl": "rounded-l-2xl",
+  "3xl": "rounded-l-3xl",
+  full: "rounded-l-full",
+};
+
+const roundedRightClasses = {
+  sm: "rounded-r-sm",
+  md: "rounded-r-md",
+  lg: "rounded-r-lg",
+  xl: "rounded-r-xl",
+  "2xl": "rounded-r-2xl",
+  "3xl": "rounded-r-3xl",
+  full: "rounded-r-full",
 };
 
 function InputGroup({
@@ -17,12 +48,13 @@ function InputGroup({
   leftElement,
   rightElement,
   parentClassName,
+  rounded = "xl",
   ...props
 }: InputProps) {
   const inputStyles = cn(
     "flex-1 border-0 focus:ring-0 focus:border-0",
-    { "rounded-l-xl": !leftElement },
-    { "rounded-r-xl": !rightElement },
+    { [roundedLeftClasses[rounded]]: !leftElement },
+    { [roundedRightClasses[rounded]]: !rightElement },
     inputClassName
   );
 
@@ -34,9 +66,14 @@ function InputGroup({
       >
         {label}
       </label>
-      <div className={cn(className, "flex w-full rounded-xl")}>
+      <div className={cn(className, "flex w-full", roundedClasses[rounded])}>
         {leftElement && (
-          <div className="flex items-center justify-center bg-white rounded-l-xl">
+          <div
+            className={cn(
+              "flex items-center justify-center bg-white",
+              roundedLeftClasses[rounded]
+            )}
+          >
             {leftElement}
           </div>
         )}
@@ -46,12 +83,19 @@ function InputGroup({
           {...props}
         />
         {rightElement && (
-          <div className="flex items-center justify-center bg-white rounded-r-xl">
+          <div
+            className={cn(
+              "flex items-center justify-center bg-white",
+              roundedRightClasses[rounded]
+            )}
+          >
             {rightElement}
           </div>
         )}
       </div>
-      <small className="block mt-1 text-red-500">{error}</small>
+      <div className="h-3">
+        <small className="text-red-500">{error}</small>
+      </div>
     </div>
   );
 }

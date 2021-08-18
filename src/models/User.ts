@@ -25,8 +25,8 @@ export const userSchema = new Schema<IUser, UserModel, IUser>(
       required: [true, "Please enter a password"],
       minLength: [8, "Minimum length is 8 characters"],
       validate: [
-        (str: string) => isStrongPassword(str, { minSymbols: 0 }),
-        "Password must contain at least one uppercase, and one number",
+        (str: string) => isStrongPassword(str, { minSymbols: 0,  }),
+        "Password must contain at least one uppercase,one lowercase, and one number",
       ],
     },
   },

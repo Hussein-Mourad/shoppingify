@@ -18,7 +18,7 @@ async function createShoppingList(req: Request, res: Response) {
       name,
       products,
     });
-
+    delete shoppingList.userId;
     res.json({ shoppingList });
   } catch (err) {
     console.error(err);
@@ -32,8 +32,11 @@ async function findUserShoppingLists(req: Request, res: Response) {
   try {
     const shoppingLists = await ShoppingList.find({ userId })
       .sort({ createdAt: -1 })
-      .populate("products")
+      .populate("products.category")
       .exec();
+    shoppingLists.forEach((list: any) => {
+      delete list.userId;
+    });
     res.json({ shoppingLists });
   } catch (err) {
     res.status(400).json({ shoppingLists: null });
@@ -42,18 +45,17 @@ async function findUserShoppingLists(req: Request, res: Response) {
 
 async function findUserShoppingListById(req: Request, res: Response) {
   const userId = res.locals.user?._id;
-
   try {
-    const shoppingLists = await ShoppingList.find({
+    const shoppingList =await ShoppingList.findOne({
       _id: req.params.id,
       userId,
     })
       .sort({ createdAt: -1 })
-      .populate("products")
+      .populate("products.category")
       .exec();
-    res.json({ shoppingLists });
+    return res.json({ shoppingList });
   } catch (err) {
-    res.status(400).json({ shoppingLists: null });
+    return res.status(400).json({ shoppingLists: null });
   }
 }
 

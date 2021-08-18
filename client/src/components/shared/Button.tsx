@@ -11,6 +11,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   onClick: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
   align?: "center" | "start" | "end";
   justify?: "center" | "start" | "end";
+  block?: boolean;
 }
 
 function Button({
@@ -22,10 +23,13 @@ function Button({
   rightIcon,
   align = "center",
   justify = "center",
+  block = false,
   ...props
 }: ButtonProps): React.ReactElement {
   const baseStyles = cn(
-    `inline-flex items-${align} justify-${justify} font-semibold transition-all duration-300 ease-in-out disabled:cursor-not-allowed disabled:bg-gray-300 disabled:hover:bg-gray-300`,
+    { "inline-flex": !block },
+    { block: block },
+    `items-${align} justify-${justify} font-semibold transition-all duration-300 ease-in-out disabled:cursor-not-allowed disabled:bg-gray-300 disabled:hover:bg-gray-300`,
     className
   );
 
