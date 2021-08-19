@@ -5,21 +5,28 @@ import Product from "../models/Product";
 
 async function createProduct(req: Request, res: Response) {
   const userId = res.locals.user?._id;
+  const { name, imageUrl, description, categoryName } = req.body;
 
-  const { name, imageUrl, description, categoryId } = req.body;
   try {
-    const category = await Category.checkUserCategory(categoryId, userId);
-    const product = await Product.create({
-      userId,
-      name,
-      imageUrl,
-      description,
-      category: categoryId,
-    });
+    let category = await Category.findOne({userId, name:categoryName});
+    if(!category) {
+      category = await Category.create({name:categoryName, userId});
+    }
 
-    res.json({ product: { ...product, category } });
+    let product = await Product.findOne({userId,name});
+    if(!product){
+      product = await Product.create({
+        userId,
+        name,
+        imageUrl,
+        description,
+        category:category._id
+      });
+    }
+
+    res.json({ product: { ...product._doc, category } });
   } catch (err) {
-    console.error(err);
+    // console.error(err);
     res.status(400).json(handleErrors(err));
   }
 }
@@ -46,7 +53,7 @@ async function findProductById(req: Request, res: Response) {
   const userId = res.locals.user?._id;
 
   try {
-    const product = await Product.find({ _id: id, userId })
+    const product = await Product.findOne({ _id: id, userId })
       .populate("category")
       .exec();
 

@@ -1,41 +1,33 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppState } from "app/store";
+import IShoppingList, { IShoppingListItem } from "types/ShoppingList"; 
+import IProduct from "types/Product";
 
-export interface Item {
-  name: string;
-  quantity: number;
-  category: string;
-  completed: boolean;
-}
-
-export interface Category {
-  name: string;
-  items: Item[];
-}
-
-const initialState: Category[] = [
-  {
-    name: "Fruits and vegetables",
-    items: [
-      {
-        name: "Avocado",
-        quantity: 1,
-        category: "Fruits and vegetables",
-        completed: false,
-      },
-    ],
-  },
-];
+const initialState: IShoppingList = {
+  name: "",
+  status: "current",
+  products: [],
+};
 
 export const shoppingListSlice = createSlice({
   name: "shoppingList",
   initialState,
-  reducers: {},
+  reducers: {
+    changeName: (state: IShoppingList, action: PayloadAction<string>) => {
+      state.name = action.payload;
+    },
+    addProduct:(state:IShoppingList, action:PayloadAction<IShoppingListItem>)=>{
+      state.products.push(action.payload);
+    },
+    removeProduct:(state:IShoppingList, action:PayloadAction<IShoppingListItem>)=>{
+      state.products.filter(product=>product.name===action.payload.name);
+    }
+  },
 });
 
-// export const getCategories = state;
-export const selectCategories = (state: AppState) => state.shoppingList;
+export const selectShoppingList = (state: AppState) => state.shoppingList;
 
+export const { changeName, addProduct, removeProduct } = shoppingListSlice.actions;
 export default shoppingListSlice.reducer;
 
 // const [showCheckBoxes, setShowCheckBoxes] = useState(false);
@@ -102,18 +94,7 @@ export default shoppingListSlice.reducer;
 //     }
 //     setCategories(categories.filter((category) => category.items.length > 0));
 //   };
-
-//   const addItem = (item: ShoppingListItem) => {
-//     let category = categories.find(
-//       (category) => category.name === item.category
-//     );
-//     if (category) {
-//       category.items.push(item);
-//     } else {
-//       categories.push({ name: item.category, items: [item] });
-//     }
-//     setCategories([...categories]);
-//   };
+;
 
 //   const toggleItemCompleted = (item: ShoppingListItem) => {
 //     let category = categories.find(

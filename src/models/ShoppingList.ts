@@ -5,12 +5,15 @@ interface IShoppingList {
   userId: Schema.Types.ObjectId;
   name: string;
   status: "cancelled" | "completed" | "current";
-  products: {
-    _id: Schema.Types.ObjectId;
-    name: String;
-    quantity: Number;
-    category: PopulatedDoc<ICategory & Document>[];
-  };
+  products: [
+    {
+      _id: Schema.Types.ObjectId;
+      name: String;
+      category: PopulatedDoc<ICategory & Document>[];
+      quantity: Number;
+      completed:Boolean;
+    }
+  ];
 }
 
 const shoppingListSchema = new Schema<IShoppingList>(
@@ -35,8 +38,9 @@ const shoppingListSchema = new Schema<IShoppingList>(
       {
         _id: Schema.Types.ObjectId,
         name: String,
-        quantity: { type: Number, default: 0 },
         category: { type: Schema.Types.ObjectId, ref: "Category" },
+        quantity: { type: Number, default: 0 },
+        completed: { type: Boolean, default: false}
       },
     ],
   },

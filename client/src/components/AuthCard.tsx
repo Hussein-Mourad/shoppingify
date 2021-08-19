@@ -1,15 +1,18 @@
-import Card from "components/shared/Card";
-import { useFormik } from "formik";
-import { ReactElement, useRef } from "react";
-import InputGroup from "components/shared/InputGroup";
 import Button from "components/shared/Button";
+import Card from "components/shared/Card";
+import InputGroup from "components/shared/InputGroup";
+import { useFormik } from "formik";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { ReactElement, useEffect, useState } from "react";
+import { CircularProgress } from "@material-ui/core";
 
 interface Props {
   authType: "Login" | "Signup";
+  url: string;
 }
 
-interface FormValues {
+export interface FormValues {
   username: string;
   password: string;
 }
@@ -20,7 +23,7 @@ const initialValues: FormValues = {
 };
 
 function validate(values: FormValues) {
-  let errors: FormValues = { username: "", password: "" };
+  let errors: any = {};
 
   if (!values.username) {
     errors.username = "Required";
@@ -41,29 +44,81 @@ function validate(values: FormValues) {
   return errors;
 }
 
-export default function AuthCard({ authType }: Props): ReactElement {
+export default function AuthCard({ authType, url }: Props): ReactElement {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("/api/auth/", {
+          method: "POST",
+        });
+        const data = await res.json();
+        if (data.user) {
+          router.push("/");
+        } else {
+          setIsLoading(false);
+        }
+      } catch (err) {
+        setIsLoading(false);
+        console.log("error", err);
+      }
+    })();
+
+    return () => {};
+  }, []);
+
   const formik = useFormik({
     initialValues: { ...initialValues },
     validate,
-    onSubmit: (values, actions) => {
-      console.log("hi");
-      console.log({ values, actions });
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async (values, actions) => {
       actions.setSubmitting(false);
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          body: JSON.stringify(values),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await res.json();
+        if (res.status === 201) {
+          router.push("/");
+        } else {
+          actions.setErrors({
+            username: data.errors.username,
+            password: data.errors.password || data.errors.message,
+          });
+        }
+      } catch (err) {
+        console.error(err);
+      }
     },
   });
 
+  if (isLoading)
+    return (
+      <div>
+        <CircularProgress classes={{ circle: "text-yellow-primary" }} />
+      </div>
+    );
+
   return (
     <Card
-      className="w-full xs:w-auto"
+      className="w-full xs:w-auto xs:min-w-[400px]"
       leftElements={
         <form
           className="w-full h-full px-2 py-3 sm:px-5"
           onSubmit={formik.handleSubmit}
         >
-          <h1 className="text-2xl font-medium text-center">{authType}</h1>
+          <h1 className="mb-4 text-2xl font-medium text-center">{authType}</h1>
           <InputGroup
-            parentClassName="my-4"
+            parentClassName={
+              formik.touched.username && formik.errors.username
+                ? "pb-1"
+                : "pb-4"
+            }
             className="border border-gray-600 hover:ring-1 hover:ring-yellow-primary hover:border-yellow-primary focus-within:ring-1 focus-within:ring-yellow-primary focus-within:border-yellow-primary"
             type="text"
             id="username"
@@ -79,9 +134,13 @@ export default function AuthCard({ authType }: Props): ReactElement {
             {...formik.getFieldProps("username")}
           />
           <InputGroup
-            parentClassName="my-4"
+            parentClassName={
+              formik.touched.password && formik.errors.password
+                ? "pb-1"
+                : "pb-4"
+            }
             className="border border-gray-600 hover:ring-1 hover:ring-yellow-primary hover:border-yellow-primary focus-within:ring-1 focus-within:ring-yellow-primary focus-within:border-yellow-primary"
-            type="text"
+            type="password"
             id="password"
             label="Passwod"
             placeholder="Enter your password"
@@ -98,22 +157,27 @@ export default function AuthCard({ authType }: Props): ReactElement {
             <small className="block mb-3">
               Don't have an account?{" "}
               <Link href="/signup" passHref>
-                <a className="text-blue-600">Register</a>
+                <a className="text-blue-500">Register</a>
               </Link>
             </small>
           ) : (
             <small className="block mb-3">
               Already have an account?{" "}
               <Link href="/login" passHref>
-                <a className="text-blue-600">Login</a>
+                <a className="text-blue-500">Login</a>
               </Link>
             </small>
           )}
-          <input
+
+          <Button
             type="submit"
-            className="block w-full px-4 py-2 font-semibold text-white transition-all duration-200 ease-in-out rounded-md disabled:cursor-not-allowed disabled:bg-gray-300 disabled:hover:bg-gray-300 bg-yellow-primary hover:bg-yellow-primary/90 active:bg-yellow-600/80 active:text-opacity-90 focus:ring focus:ring-yellow-100"
-            value={authType}
-          />
+            className="w-full px-4 py-2 text-white rounded-md"
+            color="orange"
+            onClick={() => {}}
+            block
+          >
+            {authType}
+          </Button>
         </form>
       }
     />

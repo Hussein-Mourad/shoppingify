@@ -19,8 +19,8 @@ export const productSchema = new Schema<IProduct>(
     name: {
       type: String,
       required: [true, "Please enter a name"],
-      trim: true,
       maxLength: [30, "Max Length is 30 characters"],
+      trim: true,
       index:true
     },
     imageUrl: {

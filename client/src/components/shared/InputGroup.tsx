@@ -66,7 +66,14 @@ function InputGroup({
       >
         {label}
       </label>
-      <div className={cn(className, "flex w-full", roundedClasses[rounded])}>
+
+      <div
+        className={cn(
+          className,
+          "flex items-center justify-center w-full",
+          roundedClasses[rounded]
+        )}
+      >
         {leftElement && (
           <div
             className={cn(
@@ -93,9 +100,7 @@ function InputGroup({
           </div>
         )}
       </div>
-      <div className="h-3">
-        <small className="text-red-500">{error}</small>
-      </div>
+      <small className="text-red-500">{error}</small>
     </div>
   );
 }

@@ -2,7 +2,7 @@ import { beforeEach } from "mocha";
 import Category from "../src/models/Category";
 import Product from "../src/models/Product";
 import User from "../src/models/User";
-import chai, { app } from "./common";
+import chai, { app, expect } from "./common";
 
 const appPost = (
   route: string,
@@ -17,33 +17,33 @@ const appPost = (
 };
 
 function withUserLoggedIn(
-  route: string,
-  data: Object,
-  callback: (err: any, res: any) => void
+  callback: (
+    agent: ChaiHttp.Agent,
+    user?: { username: string; password: string }
+  ) => void
 ) {
+  const agent = chai.request.agent(app);
   const user = { username: "Hussein", password: "Hussein12345" };
 
   User.create(user).then(() => {
-    chai
-      .request(app)
-      .post("/login/")
+    agent
+      .post("/api/auth/login/")
       .send(user)
       .end((err, res) => {
-        chai
-          .request(app)
-          .post(route)
-          .send(data)
-          .end((err, res) => callback(err, res));
+        res.should.have.cookie("jwt");
+        res.should.have.status(201);
+        return callback(agent);
       });
   });
 }
 
-describe("/auth/", function () {
+describe("/api/auth/", function () {
   beforeEach((done) => {
     User.deleteMany({}, done);
   });
+
   describe("POST /signup", function () {
-    const route = "/auth/signup";
+    const route = "/api/auth/signup";
 
     it("should fail to signup no data is provided", function (done) {
       appPost(
@@ -105,7 +105,7 @@ describe("/auth/", function () {
           res.body.errors.should.have
             .property("password")
             .eql(
-              "Password must contain at least one uppercase, and one number"
+              "Password must contain at least one uppercase, one lowercase, and one number"
             );
           done();
         }
@@ -153,7 +153,7 @@ describe("/auth/", function () {
   });
 
   describe("POST /login", function () {
-    const route = "/auth/login";
+    const route = "/api/auth/login";
     it("should login successfully", function (done) {
       const user = {
         username: "Hussein",
@@ -185,7 +185,7 @@ describe("/auth/", function () {
           res.body.should.be.a("object");
           res.body.should.have.property("errors");
           res.body.errors.should.have
-            .property("error")
+            .property("message")
             .eql("Invalid username and/or password");
           done();
         }
@@ -200,11 +200,11 @@ describe("/auth/", function () {
         password: "Hussein1234",
       };
       User.create(user).then(() => {
-        appPost("/auth/login", user, (err, res) => {
+        appPost("/api/auth/login", user, (err, res) => {
           if (err) return done(err);
           return chai
             .request(app)
-            .post("/auth/logout")
+            .post("/api/auth/logout")
             .end((err, res) => {
               if (err) return done(err);
               res.should.have.status(200);
@@ -218,10 +218,21 @@ describe("/auth/", function () {
   });
 
   describe("POST /", function () {
-    it("should be logged in");
+    const route = "/api/auth/";
+    it("should be logged in", function (done) {
+      withUserLoggedIn((agent) => {
+        agent.post(route).end((err, res) => {
+          if (err) done(err);
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.an("object").have.property("user");
+          expect(res.body.user).to.have.property("username");
+          done();
+        });
+      });
+    });
 
     it("should not be signed in", function (done) {
-      appPost("/auth/", {}, (err, res) => {
+      appPost(route, {}, (err, res) => {
         if (err) return done(err);
         res.should.have.status(401);
         res.body.should.be.a("object");
@@ -232,34 +243,164 @@ describe("/auth/", function () {
   });
 });
 
-describe("/categories/", function () {
-  beforeEach((done) => {
-    User.deleteMany({}, () => {});
-    Category.deleteMany({}, () => {});
-    Product.deleteMany({}, () => {});
-    done();
-  });
-  describe("POST /", function () {
-    const route = "/categories/";
+describe("/api/categories/", function () {
+  const route = "/api/categories/";
 
+  beforeEach((done) => {
+    User.deleteMany({}).then(()=>{
+      Category.deleteMany({},done)
+    })
+  });
+
+  describe("POST /", function () {
     it("should add a category", function (done) {
-      // chai
-      //   .request(app)
-      //   .post("/categories/")
-      //   .send({ name: "Fruits and vegetables" })
-      //   .end((err, res) => {
-      //     if (err) return done(err);
-      //     res.should.have.status(401);
-      //     done();
-      //   });
-      withUserLoggedIn(route, { name: "Fruits and vegetables" }, (err, res) => {
-        if (err) return done(err);
-        res.should.have.status(200);
-        res.body.should.be.a("object");
-        res.body.should.have.property("userId");
-        res.body.should.have.property("name").eql("Fruits and vegetables");
-        done();
+      withUserLoggedIn((agent) => {
+        agent
+          .post(route)
+          .send({ name: "Fruits and vegetables" })
+          .end((err, res) => {
+            if (err) return done(err);
+            expect(res).to.have.status(200);
+            expect(res.body).to.be.a("object");
+            expect(res.body).to.have.property("category");
+            expect(res.body.category)
+              .to.have.property("name")
+              .eql("Fruits and vegetables");
+            expect(res.body.category).to.have.property("userId");
+            done();
+          });
       });
     });
   });
+
+  describe("GET /", function () {
+    it("should get all categories", function (done) {
+      withUserLoggedIn((agent) => {
+        agent
+          .post(route)
+          .send({ name: "Fruits and vegetables" })
+          .end((err, res) => {
+            if (err) return done(err);
+            agent.get(route).end((err, res) => {
+              if (err) return done(err);
+              expect(res).to.have.status(200);
+              expect(res.body).to.be.an("object");
+              expect(res.body).to.have.property("categories").to.be.an("array");
+              expect(res.body.categories.length).to.be.eql(1);
+              done();
+            });
+          });
+      });
+    });
+  });
+
+  describe("GET /:id", function () {
+    it("should get one category by id", function (done) {
+      withUserLoggedIn((agent) => {
+        agent
+          .post(route)
+          .send({ name: "Fruits and vegetables" })
+          .end((err, res) => {
+            if (err) return done(err);
+            agent.get(route + res.body.category._id).end((err, res) => {
+              if (err) return done(err);
+              expect(res).to.have.status(200);
+              expect(res.body).to.be.an("object");
+              expect(res.body).to.have.property("category").to.be.an("object");
+              expect(res.body.category)
+                .to.have.property("name")
+                .eql("Fruits and vegetables");
+              done();
+            });
+          });
+      });
+    });
+  });
+
+});
+
+
+describe("/api/products/", function () {
+  const route = "/api/products/";
+
+  beforeEach((done) => {
+    User.deleteMany({}).then(()=>{
+      Category.deleteMany({}).then(()=>{
+        Product.deleteMany({},done);
+      });
+    })
+    });
+
+  describe("POST /", function () {
+    it("should add a product", function (done) {
+      withUserLoggedIn((agent) => {
+        agent
+          .post("/api/categories/")
+          .send({ name: "Fruits and vegetables" })
+          .end((err, res) => {
+            expect(res.body).to.have.property("category")
+            const categoryId=res.body.category._id
+            agent.post(route).send({
+              name:"Avocado",
+              imageUrl:"https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YXZvY2Fkb3xlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+              description:"This is an avodaco",
+              category:categoryId
+            }).end((err,res)=>{
+              if(err)done(err)
+              expect(res).to.have.status(200);
+              expect(res.body).to.be.an("object").to.have.property("product");
+              expect(res.body.product).to.be.an("object").to.have.property("name").equal("Avocado");
+              expect(res.body.product).to.have.property("description").equal("This is an avocado")
+             expect(res.body.product).to.have.property('imageUrl');
+             expect(res.body.product).to.have.property("category").to.have.property("_id").eql(categoryId) 
+            })
+          });
+      });
+    });
+  });
+
+  describe("GET /", function () {
+    it("should get all categories", function (done) {
+      withUserLoggedIn((agent) => {
+        agent
+          .post(route)
+          .send({ name: "Fruits and vegetables" })
+          .end((err, res) => {
+            if (err) return done(err);
+            agent.get(route).end((err, res) => {
+              if (err) return done(err);
+              expect(res).to.have.status(200);
+              expect(res.body).to.be.an("object");
+              expect(res.body).to.have.property("categories").to.be.an("array");
+              expect(res.body.categories.length).to.be.eql(1);
+              done();
+            });
+          });
+      });
+    });
+  });
+
+  describe("GET /:id", function () {
+    it("should get all categories", function (done) {
+      withUserLoggedIn((agent) => {
+        agent
+          .post(route)
+          .send({ name: "Fruits and vegetables" })
+          .end((err, res) => {
+            if (err) return done(err);
+            agent.get(route + res.body.category._id).end((err, res) => {
+              if (err) return done(err);
+              expect(res).to.have.status(200);
+              expect(res.body).to.be.an("object");
+              expect(res.body).to.have.property("category").to.be.an("object");
+              expect(res.body.category)
+                .to.have.property("name")
+                .eql("Fruits and vegetables");
+              done();
+            });
+          });
+      });
+    });
+  });
+  
 });

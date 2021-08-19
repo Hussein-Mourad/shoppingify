@@ -6,6 +6,7 @@ import Card from "components/shared/Card";
 import { ReactElement } from "react";
 import formatDate from "utils/formatDate";
 
+
 interface Props {
   text: string;
   listState: "completed" | "canceled";

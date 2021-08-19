@@ -11,10 +11,9 @@
     "build": "tsc -p .",
     "webpack": "webpack",
     "dev": "kill-port 8000 3000;npm-run-all --parallel dev:server dev:client",
-    "dev:fast": "kill-port 8000; npm-run-all build; nodemon ./dist/index.js",
     "dev:server": "kill-port 8000; DEBUG=shoppingify:* nodemon ./src/index.ts",
     "dev:client": "kill-port 3000; npm run dev --prefix client",
-    "test": "kill-port 8000; $npm_package_config_dbtest; env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }'; mocha --exit --timeout 5000 -r ts-node/register 'tests/*.ts'"
+    "test": "kill-port 8000; $npm_package_config_dbtest; env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }'; mocha --timeout 5000 -r ts-node/register 'tests/*.ts'"
   },
   "config": {
     "dbtest": "env NODE_ENV=test DB_URI=mongodb://127.0.0.1:27017/local-testing?directConnection=true&serverSelectionTimeoutMS=2000&retryWrites=true;"
@@ -66,6 +65,7 @@
     "chai": "^4.3.4",
     "chai-http": "^4.3.0",
     "express-session": "^1.17.2",
+    "http-proxy-middleware": "^2.0.1",
     "kill-port": "^1.6.1",
     "mocha": "^9.0.3",
     "nodemon": "^2.0.12",

@@ -8,9 +8,9 @@ import logger from "morgan";
 import path from "path";
 import connectDB from "./config/db";
 import authRouter from "./routes/auth";
-import productRouter from "./routes/product";
 import categoryRouter from "./routes/category";
-import shoppingListRouter from "./routes/shoppingList"
+import productRouter from "./routes/product";
+import shoppingListRouter from "./routes/shoppingList";
 
 dotenv.config();
 
@@ -44,10 +44,10 @@ app.use(
   })
 );
 
-app.use("/auth/", authRouter);
-app.use("/products/", productRouter);
-app.use("/categories/", categoryRouter);
-app.use("/shoppinglist/", shoppingListRouter);
+app.use("/api/auth/", authRouter);
+app.use("/api/products/", productRouter);
+app.use("/api/categories/", categoryRouter);    
+app.use("/api/shoppinglist/", shoppingListRouter);
 
 // // catch 404 and forward to error handler
 // app.use(function (req, res, next) {

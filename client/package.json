@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development; next dev",
+    "dev": "cross-env NODE_ENV=development; node ./devServer.js",
+    "dev:next": "cross-env NODE_ENV=development; next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -12,6 +13,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
     "@reduxjs/toolkit": "^1.6.1",
     "@tailwindcss/forms": "^0.3.3",
@@ -48,6 +50,7 @@
     "eslint": "7.31.0",
     "eslint-config-next": "11.0.1",
     "eslint-import-resolver-typescript": "^2.4.0",
+    "express": "^4.17.1",
     "jest": "^27.0.6",
     "postcss": "^8.3.6",
     "prettier": "^2.2.1",
@@ -56,7 +59,11 @@
     "tsconfig-paths-webpack-plugin": "^3.5.1",
     "typescript": "^4.3.5"
   },
-  "proxy": "http://localhost:8000",
+  "proxy": {
+    "/auth/*": {
+      "target": "http://localhost:8000"
+    }
+  },
   "browserslist": {
     "production": [
       ">0.2%",

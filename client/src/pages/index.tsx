@@ -4,8 +4,23 @@ import TwoSideBarsLayout from "components/layouts/TwoSideBarsLayout";
 import ItemCard from "features/shoppingList/ItemCard";
 import ShoppingList from "features/shoppingList/ShoppingList";
 import Head from "next/head";
+import IProduct from "types/Product";
+import { useEffect, useState } from "react";
+import useProductsToCategories from "hooks/useProductsToCategories";
 
 export default function Home() {
+  const [products, setProducts] = useState<IProduct[]>([]);
+  const categories = useProductsToCategories(products);
+
+  useEffect(() => {
+    setProducts([
+      {
+        name: "Avocado",
+        category: { name: "Fruits and vegetables" },
+      },
+    ]);
+    return () => {};
+  }, []);
   return (
     <div className="">
       <Head>
@@ -18,27 +33,13 @@ export default function Home() {
         <div className="min-h-screen p-2 sm:p-4 md:p-6">
           <Header />
           <div className="mt-4 sm:mt-6 md:mt-8">
-            <CategoryGrid name="Fruits and vegetables">
-              {[
-                "Avocado",
-                "Banana",
-                "Carrots",
-                "Chicken",
-                "Watermelon",
-                "Meat",
-              ].map((item) => (
-                <ItemCard
-                  key={item}
-                  text={item}
-                  onAddBtnClick={() => {
-                    alert("todo");
-                  }}
-                  onItemBtnClick={() => {
-                    alert("todo");
-                  }}
-                />
-              ))}
-            </CategoryGrid>
+            {categories.map((category) => (
+              <CategoryGrid key={category._id} name={category.name}>
+                {category.items.map((item) => (
+                  <ItemCard key={item._id} item={item} />
+                ))}
+              </CategoryGrid>
+            ))}
           </div>
         </div>
       </TwoSideBarsLayout>

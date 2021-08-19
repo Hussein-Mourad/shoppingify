@@ -19,12 +19,12 @@ export default async function authRequired(
         res.locals.user = user;
         next();
       } else {
-        res.status(401).json({ error: "User is not authenticated" });
+        throw new Error("User is not authenticated.")
       }
     } catch (err) {
-      res.status(401).json({ error: "User is not authenticated" });
+      res.status(401).json({user:null, error: "User is not authenticated" });
     }
   } else {
-    res.status(401).json({ error: "User is not authenticated" });
+    res.status(401).json({ user:null, error: "User is not authenticated" });
   }
 }

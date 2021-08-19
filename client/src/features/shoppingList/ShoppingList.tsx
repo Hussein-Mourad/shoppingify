@@ -8,7 +8,7 @@ import Image from "next/image";
 import bottleImg from "public/img/bottle.svg";
 import shoppingCartImg from "public/img/shopping.svg";
 import { ReactNode, useState } from "react";
-import { selectCategories } from "./shoppingListSlice";
+import { selectShoppingList, changeName } from "./shoppingListSlice";
 
 type ShoppingListProps = {};
 type ShoppingListItem = {
@@ -22,8 +22,8 @@ type Category = { name: string; items: ShoppingListItem[] };
 
 function ShoppingList(props: ShoppingListProps) {
   const dispatch = useAppDispatch();
-  const categories = useAppSelector(selectCategories);
-  const [inputValue, setInputValue] = useState("");
+  const shoppingList = useAppSelector(selectShoppingList);
+  const [inputValue, setInputValue] = useState(shoppingList.name);
   const [editList, setEditList] = useState(true);
 
   // initial={{ right: "-100vw", opacity: 0 }}
@@ -54,7 +54,7 @@ function ShoppingList(props: ShoppingListProps) {
           </div>
         </div>
 
-        {categories.length > 0 && (
+        {/* {categories.length > 0 && (
           <div>
             <div className="my-4 text-2xl font-semibold text-trueGray-800">
               <div className="flex items-center justify-between">
@@ -97,7 +97,7 @@ function ShoppingList(props: ShoppingListProps) {
               />
             </div>
           </div>
-        )}
+        )} */}
       </div>
       <div className="flex items-center justify-center w-full h-24 px-5 bg-white sm:h-28">
         {editList && (
@@ -118,14 +118,7 @@ function ShoppingList(props: ShoppingListProps) {
                 <Button
                   className="px-6 py-3 text-lg font-bold text-white rounded-lg bg-yellow-primary hover:bg-yellow-primary/90 focus:bg-yellow-600/75 active:bg-yellow-600/75 sm:px-8"
                   onClick={() => {
-                    // // if (newItemName)
-                    // addItem({
-                    //   name: newItemName,
-                    //   quantity: 1,
-                    //   category: "Fruits and vegetables",
-                    //   completed: false,
-                    // });
-                    // setNewItemName("");
+                    dispatch(changeName(inputValue));
                   }}
                 >
                   Save

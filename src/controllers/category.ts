@@ -6,10 +6,13 @@ async function createCategory(req: Request, res: Response) {
   const userId = res.locals.user?._id;
 
   try {
-    const category = await Category.create({
-      userId,
-      name,
-    });
+    let category = await Category.findOne({name, userId});
+    if(!category){
+       category = await Category.create({
+        userId,
+        name,
+      });
+    }
 
     res.json({ category });
   } catch (err) {

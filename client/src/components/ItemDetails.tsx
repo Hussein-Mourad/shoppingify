@@ -1,12 +1,12 @@
 import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import Image from "next/image";
 import React from "react";
-import Item from "types/Item";
+import IProduct from "types/Product";
 import Button from "./shared/Button";
 
 type Props = {
   className?: string;
-  item: Item;
+  item: IProduct;
   onClose: () => void;
   onDelete: () => void;
   onAddToList: () => void;

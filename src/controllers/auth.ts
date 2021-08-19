@@ -1,33 +1,12 @@
 import { Request, Response } from "express";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import User from "../models/User";
 
 const TEN_DAYS_IN_SECONDS = 10 * 24 * 60 * 60;
 const TEN_DAYS_IN_MILLISECONDS = TEN_DAYS_IN_SECONDS * 1000;
 
 async function isAuth(req: Request, res: Response) {
-  const token = req.signedCookies.jwt;
-  if (token) {
-    try {
-      const decodedToken = jwt.verify(
-        token,
-        process.env.JWT_SECRET || ""
-      ) as JwtPayload;
-      let user = await User.findById(decodedToken["id"]);
-      if (user) {
-        res.json({
-          user: {
-            id: user._id,
-            username: user.username,
-          },
-        });
-      }
-    } catch (err) {
-      // console.error(err);
-    }
-  } else {
-    res.status(401).json({ user: null });
-  }
+  res.json({ user: res.locals.user });
 }
 
 async function login(req: Request, res: Response) {
@@ -71,7 +50,7 @@ async function signup(req: Request, res: Response) {
       username: user.username,
     });
   } catch (err) {
-    // console.error(err);
+    console.error(err);
     res.status(401).json(handleErrors(err));
   }
 }
@@ -79,7 +58,6 @@ async function signup(req: Request, res: Response) {
 function logout(req: Request, res: Response) {
   res.cookie("jwt", "", { maxAge: 1 });
   res.json("Logout successfully");
-  // res.redirect("/");
 }
 
 function createToken(id: string) {
