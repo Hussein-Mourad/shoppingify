@@ -10,7 +10,7 @@ interface IShoppingList {
       _id: Schema.Types.ObjectId;
       name: String;
       category: PopulatedDoc<ICategory & Document>[];
-      quantity: Number;
+      quantity: number;
       completed:Boolean;
     }
   ];

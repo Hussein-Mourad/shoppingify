@@ -7,6 +7,6 @@ export default interface IShoppingList {
 }
 
 export interface IShoppingListItem extends IProduct {
-  quantity: Number;
+  quantity: number;
   completed: boolean;
 }

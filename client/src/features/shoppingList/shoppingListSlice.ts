@@ -16,99 +16,61 @@ export const shoppingListSlice = createSlice({
     changeName: (state: IShoppingList, action: PayloadAction<string>) => {
       state.name = action.payload;
     },
-    addProduct:(state:IShoppingList, action:PayloadAction<IShoppingListItem>)=>{
-      state.products.push(action.payload);
+    addProduct: (state: IShoppingList, action: PayloadAction<IProduct>) => {
+      const item: IShoppingListItem = {
+        ...action.payload,
+        quantity: 1,
+        completed: false,
+      };
+      state.products.push(item);
     },
-    removeProduct:(state:IShoppingList, action:PayloadAction<IShoppingListItem>)=>{
-      state.products.filter(product=>product.name===action.payload.name);
-    }
+    removeProduct: (
+      state: IShoppingList,
+      action: PayloadAction<IShoppingListItem>
+    ) => {
+      state.products.filter((product) => product.name === action.payload.name);
+    },
+    incrementQuantity: (
+      state: IShoppingList,
+      action: PayloadAction<IShoppingListItem>
+    ) => {
+      state.products.forEach((product) => {
+        if (product.name === action.payload.name) {
+          product.quantity++;
+        }
+      });
+    },
+    decrementQuantity: (
+      state: IShoppingList,
+      action: PayloadAction<IShoppingListItem>
+    ) => {
+      let product =state.products.find((product) => product.name === action.payload.name);
+      product&&(product.quantity=Math.max(product.quantity-1,1))
+      state.products.forEach((product) => {
+        if (product.name === action.payload.name) {
+          product.quantity = Math.max(product.quantity - 1, 1);
+        }
+      });
+    },
+    toggleComplete: (
+      state: IShoppingList,
+      action: PayloadAction<IShoppingListItem>
+    ) => {
+      let product = state.products.find(
+        (product) => product.name === action.payload.name
+      );
+      product && (product.completed = !product.completed);
+    },
   },
 });
 
 export const selectShoppingList = (state: AppState) => state.shoppingList;
 
-export const { changeName, addProduct, removeProduct } = shoppingListSlice.actions;
+export const {
+  changeName,
+  addProduct,
+  removeProduct,
+  incrementQuantity,
+  decrementQuantity,
+} = shoppingListSlice.actions;
 export default shoppingListSlice.reducer;
-
-// const [showCheckBoxes, setShowCheckBoxes] = useState(false);
-//   const [newItemName, setNewItemName] = useState("");
-//   const [categories, setCategories] = useState<Category[]>([
-//     {
-//       name: "Fruits and vegetables",
-//       items: [
-//         {
-//           name: "Avocado",
-//           quantity: 1,
-//           category: "Fruits and vegetables",
-//           completed: false,
-//         },
-//         {
-//           name: "Pre-cooked corn 450g",
-//           quantity: 4,
-//           category: "Fruits and vegetables",
-//           completed: false,
-//         },
-//       ],
-//     },
-//     {
-//       name: "Beverages",
-//       items: [
-//         { name: "Water", quantity: 3, category: "Beverages", completed: false },
-//         { name: "Cola", quantity: 8, category: "Beverages", completed: false },
-//       ],
-//     },
-//   ]);
-
-//   const addItemQuantity = (item: ShoppingListItem) => {
-//     let category = categories.find(
-//       (category) => category.name === item.category
-//     );
-//     if (category) {
-//       let categoryItem = category.items.find(
-//         (categoryItem) => categoryItem.name == item.name
-//       );
-//       if (categoryItem) categoryItem.quantity++;
-//     }
-//     setCategories([...categories]);
-//   };
-
-//   const reduceItemQuantity = (item: ShoppingListItem) => {
-//     let category = categories.find(
-//       (category) => category.name === item.category
-//     );
-//     if (category) {
-//       let categoryItem = category.items.find(
-//         (categoryItem) => categoryItem.name == item.name
-//       );
-//       if (categoryItem) Math.max(item.quantity--, 1);
-//     }
-//     setCategories([...categories]);
-//   };
-
-//   const deleteItem = (item: ShoppingListItem) => {
-//     let category = categories.find(
-//       (category) => category.name === item.category
-//     );
-//     if (category) {
-//       category.items.splice(category.items.indexOf(item), 1);
-//     }
-//     setCategories(categories.filter((category) => category.items.length > 0));
-//   };
-;
-
-//   const toggleItemCompleted = (item: ShoppingListItem) => {
-//     let category = categories.find(
-//       (category) => category.name === item.category
-//     );
-//     if (category) {
-//       let categoryItem = category.items.find(
-//         (categoryItem) => categoryItem.name == item.name
-//       );
-//       if (categoryItem) item.completed = !item.completed;
-//     }
-//     setCategories([...categories]);
-//   };
-
-//   const toggleShowCheckBoxes = () => {
-//     setShowCheckBoxes(!showCheckBoxes);
-//   };
