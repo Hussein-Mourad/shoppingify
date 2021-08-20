@@ -70,5 +70,33 @@ html {
 
 button,
 a {
-  @apply focus-visible:ring-2 focus-visible:ring-black/90;
+  @apply focus-visible:ring-2 focus-visible:ring-black/90 !important;
 }
+/* 
+* {
+  margin: 0;
+  font-size: 20px;
+}
+
+body {
+  display: grid;
+  place-content: center;
+  height: 100vh;
+  background: #1c212b;
+}
+
+.text-content {
+  width: 300px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 6px;
+}
+
+/* use https://github.com/josephschmitt/Clamp.js for polyfill */
+
+/* .text {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+} */ 

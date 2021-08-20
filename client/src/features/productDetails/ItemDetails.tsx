@@ -2,31 +2,30 @@ import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import Image from "next/image";
 import React from "react";
 import IProduct from "types/Product";
-import Button from "./shared/Button";
+import Button from "components/shared/Button";
+import { useAppDispatch, useAppSelector } from "app/hooks";
+import { addProduct } from "features/shoppingList/shoppingListSlice";
+import { setSideDrawerState } from "features/layouts/layoutSlice";
 
 type Props = {
   className?: string;
-  item: IProduct;
   onClose: () => void;
   onDelete: () => void;
   onAddToList: () => void;
 };
 
-function ItemDetails({
-  className,
-  item,
-  onClose,
-  onDelete,
-  onAddToList,
-}: Props) {
+function ItemDetails({ className, onClose, onDelete, onAddToList }: Props) {
+  const dispatch = useAppDispatch();
+  const product = useAppSelector((state) => state.productDetails.product);
+
   const itemDataStyles = "mb-4 font-medium";
   const itemTitleStyles = "text-xs text-gray-500 mb-1";
   return (
-    <div className={`${className} bg-white flex flex-col h-full w-full `}>
+    <div className={`${className} bg-white flex flex-col h-full w-full`}>
       <div className="flex-1 w-full px-5 overflow-auto sidedrawer-scrollbar">
         <div>
           <Button
-            className="mt-4 text-sm text-yellow-primary"
+            className="mt-4 mb-8 text-sm text-yellow-primary"
             onClick={onClose}
             leftIcon={
               <ArrowRightAltIcon className="rotate-180" fontSize="small" />
@@ -35,28 +34,32 @@ function ItemDetails({
             back
           </Button>
 
-          <div className="w-full my-8">
-            <Image
-              className="rounded-xl"
-              src={"https://picsum.photos/200"}
-              alt={item.name}
-              width={500}
-              height={500}
-            />
-          </div>
+          {product.url && (
+            <div className="w-full mb-8">
+              <Image
+                className="rounded-xl"
+                src={product.url}
+                alt={product.name}
+                width={500}
+                height={500}
+              />
+            </div>
+          )}
           <div>
             <div className={itemDataStyles}>
               <h2 className={itemTitleStyles}>name</h2>
-              <p className="text-lg font-semibold">{item.name}</p>
+              <p className="text-lg font-semibold">{product.name}</p>
             </div>
             <div className={itemDataStyles}>
               <h2 className={itemTitleStyles}>category</h2>
-              <p>{item.category}</p>
+              <p>{product.category.name}</p>
             </div>
-            <div className={itemDataStyles}>
-              <h2 className={itemTitleStyles}>note</h2>
-              <p>{item.note}</p>
-            </div>
+            {product.note && (
+              <div className={itemDataStyles}>
+                <h2 className={itemTitleStyles}>note</h2>
+                <p>{product.note}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -73,7 +76,15 @@ function ItemDetails({
         <Button
           className="px-5 py-3 text-white rounded-xl"
           color="orange"
-          onClick={onAddToList}
+          onClick={() => {
+            dispatch(addProduct(product));
+            dispatch(
+              setSideDrawerState({
+                isSideDrawerOpen: true,
+                sideDrawerType: "shoppingList",
+              })
+            );
+          }}
           aria-label="modal confirm button"
         >
           Add to list

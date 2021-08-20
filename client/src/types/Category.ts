@@ -1,5 +1,4 @@
-import IProduct from "./Product";
-import { IShoppingListItem } from "./ShoppingList";
+import IShoppingList, { IShoppingListItem } from "./ShoppingList";
 
 export default interface ICategory {
   _id?: string;
@@ -7,5 +6,5 @@ export default interface ICategory {
 }
 
 export interface ICategoryWithItems extends ICategory {
-  items: IProduct[];
+  items: IShoppingListItem[];
 }

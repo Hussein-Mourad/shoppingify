@@ -4,6 +4,7 @@ export default interface IShoppingList {
   name: string;
   status: "cancelled" | "completed" | "current";
   products: IShoppingListItem[];
+  isOpen?: boolean;
 }
 
 export interface IShoppingListItem extends IProduct {

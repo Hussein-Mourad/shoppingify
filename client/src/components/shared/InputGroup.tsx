@@ -52,27 +52,30 @@ function InputGroup({
   ...props
 }: InputProps) {
   const inputStyles = cn(
-    "flex-1 border-0 focus:ring-0 focus:border-0",
+    "w-full border-0 focus:ring-0 focus:border-0",
     { [roundedLeftClasses[rounded]]: !leftElement },
     { [roundedRightClasses[rounded]]: !rightElement },
     inputClassName
   );
 
   return (
-    <div className={parentClassName}>
-      <label
-        className="block mb-2 text-sm text-gray-800"
-        htmlFor={props.id || label || props.name}
-      >
-        {label}
-      </label>
+    <div className={parentClassName + " w-full h-full"}>
+      {label && (
+        <label
+          className="block mb-2 text-sm text-gray-800"
+          htmlFor={props.id || label || props.name}
+        >
+          {label}
+        </label>
+      )}
 
       <div
         className={cn(
           className,
-          "flex items-center justify-center w-full",
+          "flex items-center justify-center w-full h-full ",
           roundedClasses[rounded]
         )}
+        tabIndex={0}
       >
         {leftElement && (
           <div
@@ -100,7 +103,7 @@ function InputGroup({
           </div>
         )}
       </div>
-      <small className="text-red-500">{error}</small>
+      {error && <small className="text-red-500">{error}</small>}
     </div>
   );
 }

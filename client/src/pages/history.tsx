@@ -1,4 +1,4 @@
-import OneSideBarLayout from "components/layouts/OneSideBarLayout";
+import OneSideBarLayout from "features/layouts/OneSideBarLayout";
 import Head from "next/head";
 
 export default function Home() {

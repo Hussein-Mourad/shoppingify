@@ -2,19 +2,35 @@ import SearchIcon from "@material-ui/icons/Search";
 import { useRouter } from "next/router";
 import { ReactElement, useState } from "react";
 import InputGroup from "./shared/InputGroup";
+import { useAppSelector } from "app/hooks";
+import cn from "classnames";
 
-interface Props {}
-
-function Header(props: Props): ReactElement {
+function Header(): ReactElement {
+  const isSideDrawerOpen = useAppSelector(
+    (state) => state.layout.isSideDrawerOpen
+  );
   const [searchValue, setSearchValue] = useState("");
   const router = useRouter();
+
+  const titleStyle = cn(
+    "flex-1  mb-3 text-2xl font-semibold text-trueGray-800 sm:mb-0 ",
+    { "hidden md:block": !isSideDrawerOpen },
+    { "hidden lg:block": isSideDrawerOpen }
+  );
+
+  const inputWrapperStyle = cn(
+    "w-full mt-3 md:mt-0 ",
+    { "md:w-72 lg:w-96 md:ml-4": !isSideDrawerOpen },
+    { "lg:w-52 xl:w-80 lg:ml-4": isSideDrawerOpen }
+  );
+
   return (
     <header className="flex items-center w-full">
-      <h1 className="flex-1 hidden mb-3 text-2xl font-semibold text-trueGray-800 sm:mb-0 md:block">
+      <h1 className={titleStyle}>
         <span className="text-yellow-primary">Shoppingify</span> allows you take
-        your shopping llist wherever you go
+        your shopping list wherever you go
       </h1>
-      <div className="w-full mt-3 md:mt-0 md:w-96 md:ml-3">
+      <div className={inputWrapperStyle}>
         <InputGroup
           type="search"
           className="bg-white border-2 shadow-sm hover:border-gray-600 focus-within:border-gray-600 focus-within:shadow-md group "

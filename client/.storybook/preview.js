@@ -1,6 +1,8 @@
 import { themes } from "@storybook/theming";
 import * as NextImage from "next/image";
 import "../src/styles/globals.css";
+import { Provider } from "react-redux";
+import store from "app/store";
 
 // import * as nextImage from 'next/image';
 
@@ -24,9 +26,14 @@ export const parameters = {
     },
   },
   darkMode: {
-    // Override the default dark theme
     dark: { ...themes.dark, appBg: "#121212" },
-    // Override the default light theme
-    // light: { ...themes.normal, appBg: "white" },
   },
 };
+
+export const decorators = [
+  (Story) => (
+    <Provider store={store}>
+      <Story />
+    </Provider>
+  ),
+];

@@ -2,6 +2,8 @@ import ChartIcon from "@material-ui/icons/InsertChartOutlined";
 import ListIcon from "@material-ui/icons/List";
 import ReplayIcon from "@material-ui/icons/Replay";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCartOutlined";
+import { useAppSelector } from "app/hooks";
+import { selectProductsCount } from "features/shoppingList/shoppingListSlice";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -20,6 +22,8 @@ export default function SideBar({
   sideDrawerHandler,
 }: SideBarProps): JSX.Element {
   const { asPath } = useRouter();
+  const count = useAppSelector(selectProductsCount);
+
   return (
     <aside className="fixed top-0 left-0 z-10 flex flex-col items-center justify-between h-screen pt-4 pb-10 bg-white shadow-lg w-14 sm:w-20">
       <Link href="/" passHref>
@@ -54,7 +58,7 @@ export default function SideBar({
         color="orange"
         disabled={shoppingListButtonDisabled}
       >
-        <Badge number={1} />
+        <Badge number={count} />
         <span className="sm:hidden">
           <ShoppingCartIcon />
         </span>

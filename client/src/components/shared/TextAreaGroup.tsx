@@ -24,7 +24,7 @@ function TextAreaGroup({
       </label>
       <textarea
         id={props.id || label || props.name}
-        className={`${inputClassName} w-full resize-none rounded-xl border-gray-400`}
+        className={`${inputClassName} w-full rounded-xl border-gray-400`}
         {...props}
       />
       <small className="block mt-1 text-red-500">{error}</small>

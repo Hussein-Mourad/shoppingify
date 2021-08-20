@@ -29,7 +29,7 @@ function Button({
   const baseStyles = cn(
     { "inline-flex": !block },
     { block: block },
-    `items-${align} justify-${justify} font-semibold transition-all duration-300 ease-in-out disabled:cursor-not-allowed disabled:bg-gray-300 disabled:hover:bg-gray-300`,
+    `items-${align} justify-${justify} font-semibold transition-all duration-200 ease-in-out disabled:cursor-not-allowed disabled:bg-gray-300 disabled:hover:bg-gray-300`,
     className
   );
 
@@ -45,7 +45,7 @@ function Button({
 
   const orangeStyles = cn(
     baseStyles,
-    "bg-yellow-primary/95 hover:bg-yellow-primary/80 active:bg-yellow-600/90 active:text-opacity-90 focus:ring focus:ring-yellow-100"
+    "bg-yellow-primary/95 hover:bg-yellow-primary/80 active:bg-yellow-600/80 active:text-opacity-90 focus:ring focus:ring-yellow-100"
   );
 
   const blueStyles = cn(

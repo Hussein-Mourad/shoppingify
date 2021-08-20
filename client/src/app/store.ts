@@ -1,10 +1,12 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
-import counterReducer from "features/counter/counterSlice";
-import shoppingListReducer from "features/shoppingList/shoppingListSlice";
+import counter from "features/counter/counterSlice";
+import shoppingList from "features/shoppingList/shoppingListSlice";
+import layout from "features/layouts/layoutSlice"
+import productDetails from "features/productDetails/productDetailsSlice"
 
 export function makeStore() {
   return configureStore({
-    reducer: { counter: counterReducer, shoppingList: shoppingListReducer },
+    reducer: { counter, shoppingList , layout, productDetails },
   });
 }
 
