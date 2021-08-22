@@ -40,15 +40,7 @@ export default function ItemCard({ item }: Props): ReactElement {
         <div className="w-5">
           <Button
             className="w-full h-full hover:text-yellow-primary active:text-yellow-600/90 group"
-            onClick={() => {
-              dispatch(addProduct(item));
-              dispatch(
-                setSideDrawerState({
-                  isSideDrawerOpen: true,
-                  sideDrawerType: "shoppingList",
-                })
-              );
-            }}
+            onClick={() => dispatch(addProduct(item))}
           >
             <Add className="font-medium text-gray-400 group-hover:text-yellow-primary" />
           </Button>

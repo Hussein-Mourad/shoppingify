@@ -4,8 +4,9 @@ import InputGroup from "components/shared/InputGroup";
 import { useFormik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement } from "react";
 import { CircularProgress } from "@material-ui/core";
+import {useEffect, useState} from "react"
 
 interface Props {
   authType: "Login" | "Signup";

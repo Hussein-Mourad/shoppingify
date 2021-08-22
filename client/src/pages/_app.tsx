@@ -20,11 +20,13 @@ function MyApp({ Component, pageProps }: AppProps) {
             name="viewport"
             content="width=device-width, initial-scale=1.0"
           />
+          <link rel="icon" href="/img/logo.svg" type="image/x-icon" />
+          <title>Shoppingify</title>
         </Head>
         <Component {...pageProps} />
         <ReactQueryDevtools initialIsOpen={false} />
       </Provider>
-      </QueryClientProvider>
+    </QueryClientProvider>
   );
 }
 export default MyApp;

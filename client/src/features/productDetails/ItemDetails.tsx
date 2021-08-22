@@ -76,15 +76,7 @@ function ItemDetails({ className, onClose, onDelete, onAddToList }: Props) {
         <Button
           className="px-5 py-3 text-white rounded-xl"
           color="orange"
-          onClick={() => {
-            dispatch(addProduct(product));
-            dispatch(
-              setSideDrawerState({
-                isSideDrawerOpen: true,
-                sideDrawerType: "shoppingList",
-              })
-            );
-          }}
+          onClick={() => dispatch(addProduct(product))}
           aria-label="modal confirm button"
         >
           Add to list

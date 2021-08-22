@@ -1,7 +1,8 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { AppState } from "app/store";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import type { AppState, AppThunk } from "app/store";
 import IShoppingList, { IShoppingListItem } from "types/ShoppingList";
 import IProduct from "types/Product";
+import { setSideDrawerState } from "features/layouts/layoutSlice";
 
 const initialState: IShoppingList = {
   name: "",
@@ -17,7 +18,10 @@ export const shoppingListSlice = createSlice({
     changeName: (state: IShoppingList, action: PayloadAction<string>) => {
       if (action.payload) state.name = action.payload;
     },
-    addProduct: (state: IShoppingList, action: PayloadAction<IProduct>) => {
+    addProductToList: (
+      state: IShoppingList,
+      action: PayloadAction<IProduct>
+    ) => {
       const item: IShoppingListItem = {
         ...action.payload,
         quantity: 1,
@@ -83,7 +87,6 @@ export const selectOpenState = (state: AppState) => state.shoppingList.isOpen;
 
 export const {
   changeName,
-  addProduct,
   removeProduct,
   incrementQuantity,
   decrementQuantity,
@@ -92,5 +95,35 @@ export const {
   completeList,
   cancelList,
 } = shoppingListSlice.actions;
+
+export const addProduct = (product: IProduct): AppThunk => (
+  dispatch,
+  getState
+) => {
+  dispatch(shoppingListSlice.actions.addProductToList(product));
+  dispatch(
+    setSideDrawerState({
+      isSideDrawerOpen: true,
+      sideDrawerType: "shoppingList",
+    })
+  );
+};
+
+export const addAsync = createAsyncThunk(
+  "shoppingList/addAsync",
+  async (shoppingList: IShoppingList) => {
+    const response = await fetch("/api/shoppinglist/", {
+      method: "POST",
+      body: JSON.stringify({
+        name: shoppingList.name,
+        products: shoppingList.products,
+        status: shoppingList.status,
+      }),
+      headers:{
+        "Content-Type":"application/json"
+      }
+    });
+  }
+);
 
 export default shoppingListSlice.reducer;
