@@ -17,32 +17,13 @@ export default function Home() {
   const categories = useProductsToCategories(products);
 
   useEffect(() => {
-    setProducts([
-      {
-        name: "Avocado",
-        quantity: 1,
-        completed: false,
-        category: { name: "Fruits and vegetables" },
-      },
-      {
-        name: "Avocado2",
-        quantity: 1,
-        completed: false,
-        category: { name: "Fruits and vegetables" },
-      },
-      {
-        name: "Avocado5",
-        quantity: 1,
-        completed: false,
-        category: { name: "Fruits and vegetables" },
-      },
-      {
-        name: "Avocado3",
-        quantity: 1,
-        completed: false,
-        category: { name: "Fruits and vegetables" },
-      },
-    ]);
+    (async () => {
+      try {
+        const res = await fetch("/api/products/");
+        const data = await res.json();
+        setProducts(data.products);
+      } catch (err) {}
+    })(); 
     return () => {};
   }, []);
 

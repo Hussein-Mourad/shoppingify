@@ -75,7 +75,6 @@ function InputGroup({
           "flex items-center justify-center w-full h-full ",
           roundedClasses[rounded]
         )}
-        tabIndex={0}
       >
         {leftElement && (
           <div

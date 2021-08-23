@@ -1,5 +1,6 @@
 import cn from "classnames";
 import { ButtonHTMLAttributes } from "react";
+import { CircularProgress } from "@material-ui/core";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
@@ -12,6 +13,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   align?: "center" | "start" | "end";
   justify?: "center" | "start" | "end";
   block?: boolean;
+  loading?: boolean;
 }
 
 function Button({
@@ -24,6 +26,7 @@ function Button({
   align = "center",
   justify = "center",
   block = false,
+  loading = false,
   ...props
 }: ButtonProps): React.ReactElement {
   const baseStyles = cn(
@@ -69,9 +72,14 @@ function Button({
 
   return (
     <button className={getStyles()} {...props}>
-      {leftIcon && <span className="mr-2">{leftIcon}</span>}
+      {loading && (
+        <span className="flex items-center mr-2">
+          <CircularProgress classes={{ circle: "text-white" }} size={15} />
+        </span>
+      )}
+      {!loading && leftIcon && <span className="mr-2">{leftIcon}</span>}
       {children}
-      {rightIcon && <span className="ml-2">{rightIcon}</span>}
+      {!loading && rightIcon && <span className="ml-2">{rightIcon}</span>}
     </button>
   );
 }

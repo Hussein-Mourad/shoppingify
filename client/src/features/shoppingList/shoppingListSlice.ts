@@ -4,12 +4,31 @@ import IShoppingList, { IShoppingListItem } from "types/ShoppingList";
 import IProduct from "types/Product";
 import { setSideDrawerState } from "features/layouts/layoutSlice";
 
+
 const initialState: IShoppingList = {
   name: "",
   status: "current",
   products: [],
-  isOpen: false,
 };
+
+export const addAsync = createAsyncThunk(
+  "shoppingList/addAsync",
+  async (shoppingList: IShoppingList) => {
+    const response = await fetch("/api/shoppinglist/", {
+      method: "POST",
+      body: JSON.stringify({
+        name: shoppingList.name,
+        products: shoppingList.products,
+        status: shoppingList.status,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data: IShoppingList = await response.json();
+    return data;
+  }
+);
 
 export const shoppingListSlice = createSlice({
   name: "shoppingList",
@@ -36,7 +55,6 @@ export const shoppingListSlice = createSlice({
       state: IShoppingList,
       action: PayloadAction<IShoppingListItem>
     ) => {
-      // state.products.splice(state.products.indexOf(action.payload) - 1, 1);
       state.products = state.products.filter(
         (product) => product.name != action.payload.name
       );
@@ -68,9 +86,6 @@ export const shoppingListSlice = createSlice({
       );
       product && (product.completed = !product.completed);
     },
-    setOpenState: (state: IShoppingList, action: PayloadAction<boolean>) => {
-      state.isOpen = action.payload;
-    },
     completeList: (state: IShoppingList) => {
       state.status = "completed";
     },
@@ -78,12 +93,18 @@ export const shoppingListSlice = createSlice({
       state.status = "cancelled";
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(addAsync.fulfilled, (state, action) => {
+      state.name = action.payload.name;
+      state.products = action.payload.products;
+      state.status = action.payload.status;
+    });
+  },
 });
 
 export const selectShoppingList = (state: AppState) => state.shoppingList;
 export const selectProductsCount = (state: AppState) =>
   state.shoppingList.products.length;
-export const selectOpenState = (state: AppState) => state.shoppingList.isOpen;
 
 export const {
   changeName,
@@ -91,7 +112,6 @@ export const {
   incrementQuantity,
   decrementQuantity,
   toggleComplete,
-  setOpenState,
   completeList,
   cancelList,
 } = shoppingListSlice.actions;
@@ -107,23 +127,9 @@ export const addProduct = (product: IProduct): AppThunk => (
       sideDrawerType: "shoppingList",
     })
   );
+  // dispatch(addAsync(getState().shoppingList));
 };
 
-export const addAsync = createAsyncThunk(
-  "shoppingList/addAsync",
-  async (shoppingList: IShoppingList) => {
-    const response = await fetch("/api/shoppinglist/", {
-      method: "POST",
-      body: JSON.stringify({
-        name: shoppingList.name,
-        products: shoppingList.products,
-        status: shoppingList.status,
-      }),
-      headers:{
-        "Content-Type":"application/json"
-      }
-    });
-  }
-);
+
 
 export default shoppingListSlice.reducer;

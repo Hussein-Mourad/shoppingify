@@ -14,7 +14,6 @@ export default function useProductsToCategories(products: IShoppingListItem[]) {
       let category = tmp.find(
         (category) => category.name === product.category.name
       );
-      console.log("category", category);
       category && category.items.push(product);
       !category && tmp.push({ name: product.category.name, items: [product] });
     });
@@ -23,6 +22,5 @@ export default function useProductsToCategories(products: IShoppingListItem[]) {
     return () => {};
   }, [products]);
 
-  console.log(categories);
   return categories;
 }

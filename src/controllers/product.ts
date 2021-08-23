@@ -6,27 +6,28 @@ import Product from "../models/Product";
 async function createProduct(req: Request, res: Response) {
   const userId = res.locals.user?._id;
   const { name, imageUrl, description, categoryName } = req.body;
-
+  // console.log(req.body);
   try {
-    let category = await Category.findOne({userId, name:categoryName});
-    if(!category) {
-      category = await Category.create({name:categoryName, userId});
+    let category = await Category.findOne({ userId, name: categoryName });
+    if (!category) {
+      category = await Category.create({ name: categoryName, userId });
     }
 
-    let product = await Product.findOne({userId,name});
-    if(!product){
+    let product = await Product.findOne({ userId, name });
+
+    if (!product) {
       product = await Product.create({
         userId,
         name,
         imageUrl,
         description,
-        category:category._id
+        category: category._id,
       });
     }
 
     res.json({ product: { ...product._doc, category } });
   } catch (err) {
-    // console.error(err);
+    console.error(err);
     res.status(400).json(handleErrors(err));
   }
 }

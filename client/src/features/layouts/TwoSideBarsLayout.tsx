@@ -4,7 +4,7 @@ import SideBar from "components/SideBar";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import { AppState } from "app/store";
 import { toggleSideDrawer, setSideDrawerState } from "./layoutSlice";
-import AddItemForm from "components/AddItemForm";
+import AddProductFrom from "features/products/AddProductForm";
 import ShoppingList from "features/shoppingList/ShoppingList";
 import ItemDetails from "features/productDetails/ItemDetails";
 
@@ -46,7 +46,7 @@ export default function Layout({ children, sideDrawer }: Props) {
             {sideDrawerType === "shoppingList" ? (
               <ShoppingList />
             ) : sideDrawerType === "addForm" ? (
-              <AddItemForm />
+              <AddProductFrom />
             ) : (
               <ItemDetails
                 onClose={() =>

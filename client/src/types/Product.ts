@@ -1,9 +1,9 @@
 import ICategory from "./Category";
 
 export default interface IProduct {
-  _id?: string;
-  url?: string;
+  _id: string;
+  imageUrl?: string;
   name: string;
   category: ICategory;
-  note?: string;
+  description?: string;
 }

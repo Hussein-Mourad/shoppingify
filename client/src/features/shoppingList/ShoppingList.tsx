@@ -2,15 +2,13 @@ import ShoppingListItem from "./ShoppingListItem";
 import EditIcon from "@material-ui/icons/Edit";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import Button from "components/shared/Button";
-import InputGroup from "components/shared/InputGroup";
-import useProductsToCategories from "hooks/useProductsToCategories";
+  import useProductsToCategories from "hooks/useProductsToCategories";
 import Image from "next/image";
 import bottleImg from "public/img/bottle.svg";
 import shoppingCartImg from "public/img/shopping.svg";
 import { ReactNode, useState } from "react";
 import {
   selectShoppingList,
-  changeName,
   incrementQuantity,
   decrementQuantity,
   toggleComplete,
@@ -18,17 +16,21 @@ import {
 } from "./shoppingListSlice";
 import { setSideDrawerState } from "features/layouts/layoutSlice";
 import { IShoppingListItem } from "types/ShoppingList";
+import ShoppingListForm from "./ShoppingListForm";
 
 function ShoppingList() {
   const dispatch = useAppDispatch();
   const shoppingList = useAppSelector(selectShoppingList);
-  const [inputValue, setInputValue] = useState(shoppingList.name);
-  const [editList, setEditList] = useState(true);
+  const [editList, setEditList] = useState(shoppingList.name === "");
   const categories = useProductsToCategories(shoppingList.products);
 
   const toggleEditList = () => {
     setEditList(!editList);
   };
+
+  const shoppingListItems = ()=>{
+
+  }
 
   return (
     <div className="bg-[#FFF0DE] w-full h-full flex flex-col justify-between">
@@ -112,34 +114,7 @@ function ShoppingList() {
         )}
       </div>
       <div className="flex items-center justify-center w-full h-24 px-4 bg-white lg:px-6 sm:h-28">
-        {editList && (
-          <form
-            autoComplete="off"
-            className="flex-1"
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <InputGroup
-              type="text"
-              name="item-name"
-              placeholder="Enter a name"
-              className="border-2 border-yellow-primary caret-yellow-primary focus-within:border-yellow-600/75 hover:border-yellow-primary/90 focus-visible:border-black/90"
-              inputClassName="py-2 sm:py-3"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              rightElement={
-                <Button
-                  className="px-4 py-2 text-lg font-bold text-white rounded-lg sm:px-6 sm:py-3 bg-yellow-primary hover:bg-yellow-primary/90 focus:bg-yellow-600/75 active:bg-yellow-600/80"
-                  onClick={() => {
-                    inputValue && dispatch(changeName(inputValue));
-                    inputValue && setEditList(false);
-                  }}
-                >
-                  Save
-                </Button>
-              }
-            />
-          </form>
-        )}
+        {editList && <ShoppingListForm setEditList={setEditList} />}
         {!editList && (
           <>
             <Button

@@ -63,7 +63,6 @@ export default function AuthCard({ authType, url }: Props): ReactElement {
         }
       } catch (err) {
         setIsLoading(false);
-        console.log("error", err);
       }
     })();
 
@@ -93,7 +92,6 @@ export default function AuthCard({ authType, url }: Props): ReactElement {
           });
         }
       } catch (err) {
-        console.error(err);
       }
     },
   });
@@ -158,14 +156,18 @@ export default function AuthCard({ authType, url }: Props): ReactElement {
             <small className="block mb-3">
               Don't have an account?{" "}
               <Link href="/signup" passHref>
-                <a className="text-blue-500">Register</a>
+                <a className="text-blue-500" tabIndex={0}>
+                  Register
+                </a>
               </Link>
             </small>
           ) : (
             <small className="block mb-3">
               Already have an account?{" "}
               <Link href="/login" passHref>
-                <a className="text-blue-500">Login</a>
+                <a className="text-blue-500" tabIndex={0}>
+                  Login
+                </a>
               </Link>
             </small>
           )}

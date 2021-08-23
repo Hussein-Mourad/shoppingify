@@ -1,13 +1,13 @@
 import { useFormik } from "formik";
 import React, { ReactElement } from "react";
-import Button from "./shared/Button";
-import InputGroup from "./shared/InputGroup";
-import SelectGroup from "./shared/SelectGroup";
-import TextAreaGroup from "./shared/TextAreaGroup";
+import Button from "components/shared/Button";
+import InputGroup from "components/shared/InputGroup";
+import SelectGroup from "components/shared/SelectGroup";
+import TextAreaGroup from "components/shared/TextAreaGroup";
 import { useAppDispatch } from "app/hooks";
 import { setSideDrawerState } from "features/layouts/layoutSlice";
 
-type AddItemFormProps = React.FormHTMLAttributes<HTMLFormElement>;
+type AddProductFromProps = React.FormHTMLAttributes<HTMLFormElement>;
 interface FormValues {
   name: string;
   note?: string;
@@ -40,21 +40,27 @@ const initialValues: FormValues = {
   category: "",
 };
 
-function AddItemForm({ className }: AddItemFormProps): ReactElement {
+function AddProductFrom({ className }: AddProductFromProps): ReactElement {
   const dispatch = useAppDispatch();
   const formik = useFormik({
     initialValues: { ...initialValues },
     validate,
     onSubmit: async (values, actions) => {
-      const res = await fetch("/api/products/", {method:"POST",
-       body: JSON.stringify(values),
-       headers:{
-         "Content-Type":"application/json"
-       }
-    })
-      console.log({ values, actions });
-      alert(JSON.stringify(values, null, 2));
-      actions.setSubmitting(false);
+      const res = await fetch("/api/products/", {
+        method: "POST",
+        body: JSON.stringify({
+          name: values.name,
+          description: values.note,
+          imageUrl: values.image,
+          categoryName: values.category,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      console.log(data);
+      if (data.error) actions.setSubmitting(false);
     },
   });
 
@@ -147,7 +153,7 @@ function AddItemForm({ className }: AddItemFormProps): ReactElement {
                 })
               )
             }
-            aria-label="modal cancel button"
+            aria-label="cancel button"
             link
           >
             cancel
@@ -155,11 +161,12 @@ function AddItemForm({ className }: AddItemFormProps): ReactElement {
           <Button
             type="submit"
             className="px-5 py-3 text-white rounded-xl"
-            color="blue"
+            color="orange"
             onClick={() => {}}
-            aria-label="modal confirm button"
+            aria-label="save button"
+            disabled={!formik.isValid || !formik.dirty}
           >
-            Complete
+            Save
           </Button>
         </div>
       </form>
@@ -167,4 +174,4 @@ function AddItemForm({ className }: AddItemFormProps): ReactElement {
   );
 }
 
-export default AddItemForm;
+export default AddProductFrom;

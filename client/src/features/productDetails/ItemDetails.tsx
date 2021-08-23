@@ -34,11 +34,11 @@ function ItemDetails({ className, onClose, onDelete, onAddToList }: Props) {
             back
           </Button>
 
-          {product.url && (
+          {product.imageUrl && (
             <div className="w-full mb-8">
               <Image
                 className="rounded-xl"
-                src={product.url}
+                src={product.imageUrl}
                 alt={product.name}
                 width={500}
                 height={500}
@@ -54,10 +54,10 @@ function ItemDetails({ className, onClose, onDelete, onAddToList }: Props) {
               <h2 className={itemTitleStyles}>category</h2>
               <p>{product.category.name}</p>
             </div>
-            {product.note && (
+            {product.description && (
               <div className={itemDataStyles}>
                 <h2 className={itemTitleStyles}>note</h2>
-                <p>{product.note}</p>
+                <p>{product.description}</p>
               </div>
             )}
           </div>

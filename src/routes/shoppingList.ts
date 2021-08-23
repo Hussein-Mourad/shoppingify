@@ -5,7 +5,7 @@ const router = Router();
 
 router.get("/", authRequired, controller.findUserShoppingLists);
 router.get("/:id", authRequired, controller.findUserShoppingListById);
-router.post("/", authRequired, controller.createShoppingList);
+router.post("/", authRequired, controller.createOrUpdateCurrentShoppingList);
 router.put("/:id", authRequired, controller.updateShoppingListById);
 
 export default router;

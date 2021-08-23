@@ -68,10 +68,11 @@ html {
   @apply bg-yellow-600/80;
 }
 
-button,
-a {
+button, a{
   @apply focus-visible:ring-2 focus-visible:ring-black/90 !important;
 }
+
+
 /* 
 * {
   margin: 0;

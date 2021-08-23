@@ -18,7 +18,39 @@ async function createShoppingList(req: Request, res: Response) {
       name,
       products,
     });
-    delete shoppingList.userId;
+
+    res.json({ shoppingList });
+  } catch (err) {
+    console.error(err);
+    res.status(400).json(handleErrors(err));
+  }
+}
+
+async function createOrUpdateCurrentShoppingList(req: Request, res: Response) {
+  const userId = res.locals.user?._id;
+  let { name, products, status } = req.body;
+  if (!products) products = [];
+  try {
+    await checkProducts(products);
+    let shoppingList = await ShoppingList.findOne({ status: "current" });
+    if (shoppingList) {
+      await ShoppingList.updateOne(
+        { _id: shoppingList._id, userId },
+        { name, products, status },
+        {
+          runValidators: true,
+        }
+      );
+    } else {
+      shoppingList = await ShoppingList.create({
+        userId,
+        name,
+        products,
+      });
+    }
+    shoppingList = await ShoppingList.findOne({ status })
+      .populate("products.category")
+      .exec();
     res.json({ shoppingList });
   } catch (err) {
     console.error(err);
@@ -34,9 +66,7 @@ async function findUserShoppingLists(req: Request, res: Response) {
       .sort({ createdAt: -1 })
       .populate("products.category")
       .exec();
-    shoppingLists.forEach((list: any) => {
-      delete list.userId;
-    });
+
     res.json({ shoppingLists });
   } catch (err) {
     res.status(400).json({ shoppingLists: null });
@@ -46,7 +76,7 @@ async function findUserShoppingLists(req: Request, res: Response) {
 async function findUserShoppingListById(req: Request, res: Response) {
   const userId = res.locals.user?._id;
   try {
-    const shoppingList =await ShoppingList.findOne({
+    const shoppingList = await ShoppingList.findOne({
       _id: req.params.id,
       userId,
     })
@@ -106,6 +136,7 @@ function handleErrors(err: { message: string; code: number; errors: any }) {
 
 export default {
   createShoppingList,
+  createOrUpdateCurrentShoppingList,
   findUserShoppingLists,
   findUserShoppingListById,
   updateShoppingListById,

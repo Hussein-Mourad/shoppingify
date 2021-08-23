@@ -5,9 +5,9 @@ export interface IProductDetails {
   product:IProduct
 }
 
-const initialState:IProductDetails= {
-  product:{name:"", category:{name:""}}
-}
+const initialState: IProductDetails = {
+  product: { _id: "", name: "", category: { name: "" } },
+};
 
 export const productDetailSlice = createSlice({
   name: 'productDetails',
