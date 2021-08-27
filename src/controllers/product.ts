@@ -6,23 +6,38 @@ import Product from "../models/Product";
 async function createProduct(req: Request, res: Response) {
   const userId = res.locals.user?._id;
   const { name, imageUrl, description, categoryName } = req.body;
-  // console.log(req.body);
+  let productData: any = { name, categoryName };
+  if (imageUrl) {
+    productData.imageUrl = imageUrl;
+  }
+  if (description) {
+    productData.description = description;
+  }
   try {
     let category = await Category.findOne({ userId, name: categoryName });
     if (!category) {
       category = await Category.create({ name: categoryName, userId });
     }
 
-    let product = await Product.findOne({ userId, name });
+    let product = await Product.findOne({
+      userId,
+      name,
+      category: category._id,
+    })
+      .populate("category")
+      .exec();
 
     if (!product) {
       product = await Product.create({
+        ...productData,
         userId,
-        name,
-        imageUrl,
-        description,
         category: category._id,
       });
+      product = await Product.findOne({ userId, name })
+        .populate("category")
+        .exec();
+    } else {
+      throw new Error("Product already exists.");
     }
 
     res.json({ product: { ...product._doc, category } });
@@ -82,7 +97,10 @@ function handleErrors(err: { message: string; code: number; errors: any }) {
 
   if (err.message === "Category is not found") {
     errors.message = err.message;
+  } else if(err.message==="Product already exists.") {
+    errors.message=err.message;
   }
+
 
   if (err.errors) {
     Object.values(err.errors).forEach((value: any) => {

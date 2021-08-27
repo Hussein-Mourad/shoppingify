@@ -5,6 +5,7 @@ import InputGroup from "./shared/InputGroup";
 import { useAppSelector } from "app/hooks";
 import cn from "classnames";
 
+
 function Header(): ReactElement {
   const isSideDrawerOpen = useAppSelector(
     (state) => state.layout.isSideDrawerOpen
@@ -45,12 +46,12 @@ function Header(): ReactElement {
           value={searchValue}
           onChange={(e) => {
             setSearchValue(e.target.value);
+            !e.target.value && router.push("/");
           }}
           onKeyPress={(e) => {
             if (e.key === "Enter") {
               searchValue && router.push("/?name=" + searchValue);
               !searchValue && router.push("/");
-              alert("Todo");
             }
           }}
         />

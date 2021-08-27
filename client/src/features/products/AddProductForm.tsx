@@ -1,11 +1,13 @@
 import { useFormik } from "formik";
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import Button from "components/shared/Button";
 import InputGroup from "components/shared/InputGroup";
 import SelectGroup from "components/shared/SelectGroup";
 import TextAreaGroup from "components/shared/TextAreaGroup";
-import { useAppDispatch } from "app/hooks";
+import { useAppDispatch, useAppSelector } from "app/hooks";
 import { setSideDrawerState } from "features/layouts/layoutSlice";
+import ICategory from "types/Category";
+import { addNewProduct } from "./productsSlice";
 
 type AddProductFromProps = React.FormHTMLAttributes<HTMLFormElement>;
 interface FormValues {
@@ -41,28 +43,48 @@ const initialValues: FormValues = {
 };
 
 function AddProductFrom({ className }: AddProductFromProps): ReactElement {
+  const [suggestions, setSuggestions] = useState<string[]>([]);
   const dispatch = useAppDispatch();
+  const productErrors = useAppSelector((state) => state.products.errors);
+
   const formik = useFormik({
     initialValues: { ...initialValues },
     validate,
     onSubmit: async (values, actions) => {
-      const res = await fetch("/api/products/", {
-        method: "POST",
-        body: JSON.stringify({
-          name: values.name,
-          description: values.note,
-          imageUrl: values.image,
-          categoryName: values.category,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await res.json();
-      console.log(data);
-      if (data.error) actions.setSubmitting(false);
+      dispatch(
+        addNewProduct({
+          name: values.name.trim(),
+          description: values.note?.trim(),
+          imageUrl: values.image?.trim(),
+          categoryName: values.category.trim(),
+        })
+      );
+      console.log("🚀 ~ file: AddProductForm.tsx ~ line 63 ~ onSubmit: ~ productErrors", productErrors)
+      if (productErrors) {
+        actions.setErrors({
+          image: productErrors.imageUrl ?? "",
+          note: productErrors.description ?? "",
+        });
+      }
+
+      actions.setSubmitting(false);
     },
   });
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await fetch("/api/categories");
+        const data = await response.json();
+        let tmp: string[] = [];
+        data.categories.forEach((category: ICategory) => {
+          tmp.push(category.name);
+        });
+        setSuggestions(tmp);
+      } catch (error) {}
+    })();
+    return () => {};
+  }, []);
 
   return (
     <>
@@ -127,11 +149,7 @@ function AddProductFrom({ className }: AddProductFromProps): ReactElement {
               label="Category"
               inputClassName="py-3 pl-3 border-2 border-gray-400  hover:border-gray-800 focus:ring-0 focus:border-gray-800"
               placeholder="Enter a category"
-              options={[
-                "Enter a category",
-                "Fruits and vegetables",
-                "Beverages",
-              ]}
+              options={suggestions}
               error={
                 formik.touched.category && formik.errors.category
                   ? formik.errors.category
@@ -142,7 +160,7 @@ function AddProductFrom({ className }: AddProductFromProps): ReactElement {
           </div>
         </div>
 
-        <div className="flex items-center justify-center w-full h-24 px-5 bg-white sm:h-28">
+        <div className="z-10 flex items-center justify-center w-full h-24 px-5 bg-white sm:h-28">
           <Button
             className="px-5 py-3 mr-2 rounded-xl"
             onClick={() =>

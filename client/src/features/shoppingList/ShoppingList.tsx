@@ -28,10 +28,6 @@ function ShoppingList() {
     setEditList(!editList);
   };
 
-  const shoppingListItems = ()=>{
-
-  }
-
   return (
     <div className="bg-[#FFF0DE] w-full h-full flex flex-col justify-between">
       <div className="flex flex-col h-full px-4 overflow-auto pt-7 lg:px-6 sidedrawer-scrollbar">

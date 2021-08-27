@@ -1,43 +1,39 @@
-import {
-  createAsyncThunk,
-  createSlice,
-  PayloadAction,
-  createEntityAdapter,
-} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { AppState, AppThunk } from "app/store";
+import axios from "axios";
 import IProduct from "types/Product";
 
-// export interface IProductsState {
-//   products: IProduct[];
-//   status: "idle" | "loading" | "failed";
-// }
+export interface IProductsState {
+  products: IProduct[];
+  status: "idle" | "loading" | "failed" | "success";
+  errors: any;
+}
 
-const productsAdapter = createEntityAdapter<IProduct>({
-  selectId: (product) => product._id,
-});
-
-const initialState = productsAdapter.getInitialState({
+const initialState: IProductsState = {
+  products: [],
   status: "idle",
-});
+  errors: {},
+};
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async () => {
-    const response = await fetch("/api/products/");
-    const data = await response.json();
-    return data.products;
+    const response = await axios.get("/api/products");
+    return response.data.products;
   }
 );
 
-export const addProduct = createAsyncThunk(
+export const addNewProduct = createAsyncThunk(
   "products/AddProduct",
-  async (product: IProduct) => {
-    const response = await fetch("/api/products/", {
-      method: "POST",
-      body: JSON.stringify(product),
-    });
-    const data = await response.json();
-    return data.product;
+  async (product: {
+    name: string;
+    categoryName: string;
+    imageUrl?: string;
+    description?: string;
+  }) => {
+    const response = await axios.post("/api/products/", product);
+    console.log("🚀 ~ file: productsSlice.ts ~ line 35 ~ response", response)
+    return response.data.product;
   }
 );
 
@@ -51,13 +47,28 @@ export const productsSlice = createSlice({
         state.status = "loading";
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        productsAdapter.upsertMany(state, action.payload);
+        state.status = "success";
+        state.products = action.payload;
       })
-      .addCase(addProduct.pending, (state) => {
+      .addCase(fetchProducts.rejected, (state) => {
+        state.status = "failed";
+        state.errors = "Check your internet connection and try again.";
+      })
+      .addCase(addNewProduct.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(addProduct.fulfilled, productsAdapter.addOne);
+      .addCase(addNewProduct.rejected, (state) => {
+        state.status = "failed";
+        state.errors = "Check your internet connection and try again.";
+      })
+      .addCase(addNewProduct.fulfilled, (state, action) => {
+        state.status = "success";
+        if (action.payload.errors) {
+          state.errors = action.payload.errors;
+        } else {
+          state.products = state.products.concat(action.payload);
+        }
+      });
   },
 });
 

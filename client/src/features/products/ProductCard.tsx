@@ -4,7 +4,7 @@ import Button from "components/shared/Button";
 import Card from "components/shared/Card";
 import React, { ReactElement } from "react";
 import IProduct from "types/Product";
-import { addProduct } from "./shoppingListSlice";
+import { addProduct } from "features/shoppingList/shoppingListSlice";
 import { setSideDrawerState } from "features/layouts/layoutSlice";
 import { showProductDetails } from "features/productDetails/productDetailsSlice";
 
@@ -12,7 +12,7 @@ interface Props {
   item: IProduct;
 }
 
-export default function ItemCard({ item }: Props): ReactElement {
+export default function ProductCard({ item }: Props): ReactElement {
   const dispatch = useAppDispatch();
 
   return (

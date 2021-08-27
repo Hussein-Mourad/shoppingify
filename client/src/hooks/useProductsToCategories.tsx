@@ -1,16 +1,15 @@
-import { tmpdir } from "os";
 import { useState, useEffect } from "react";
 import { ICategoryWithItems } from "types/Category";
-import IProduct from "types/Product";
-import { IShoppingListItem } from "types/ShoppingList";
 
-export default function useProductsToCategories(products: IShoppingListItem[]) {
-  const [categories, setCategories] = useState<ICategoryWithItems[]>([]);
+
+
+export default function useProductsToCategories<T>(products: T[], dependency?: Array<any>) {
+  const [categories, setCategories] = useState<ICategoryWithItems<T>[]>([]);
 
   useEffect(() => {
-    let tmp: ICategoryWithItems[] = [];
+    let tmp: ICategoryWithItems<T>[] = [];
 
-    products.forEach((product) => {
+    products.forEach((product: any) => {
       let category = tmp.find(
         (category) => category.name === product.category.name
       );
@@ -20,7 +19,7 @@ export default function useProductsToCategories(products: IShoppingListItem[]) {
 
     setCategories([...tmp]);
     return () => {};
-  }, [products]);
+  }, [dependency||products]);
 
   return categories;
 }

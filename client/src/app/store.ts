@@ -3,10 +3,11 @@ import counter from "features/counter/counterSlice";
 import shoppingList from "features/shoppingList/shoppingListSlice";
 import layout from "features/layouts/layoutSlice"
 import productDetails from "features/productDetails/productDetailsSlice"
+import products from "features/products/productsSlice"
 
 export function makeStore() {
   return configureStore({
-    reducer: { counter, shoppingList , layout, productDetails },
+    reducer: { counter, shoppingList , layout, productDetails, products },
   });
 }
 
