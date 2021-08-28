@@ -1,8 +1,8 @@
 import { ReactElement, useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "app/hooks";
-import { fetchProducts } from "./productsSlice";
+import { fetchProducts, selectFilterdProducts } from "./productsSlice";
 import ProductCard from "./ProductCard";
-import CategoryGrid from "components/CategoryGrid";
+import CategoryGrid from "./CategoryGrid";
 import IProduct from "types/Product";
 import { useRouter } from "next/router";
 import { ICategoryWithItems } from "types/Category";
@@ -11,15 +11,13 @@ interface Props {}
 
 export default function ProductsList({}: Props): ReactElement {
   const router = useRouter();
-  const [filterTerm, setFilterTerm] = useState("");
+  const [filterTerm, setFilterTerm] = useState(
+    (router.query.filter as string) || ""
+  );
   const dispatch = useAppDispatch();
   const productStatus = useAppSelector((state) => state.products.status);
   const products = useAppSelector((state) =>
-    state.products.products.filter(
-      (product) =>
-        product.name.toLowerCase().includes(filterTerm.toLowerCase()) ||
-        product.category.name.toLowerCase().includes(filterTerm.toLowerCase())
-    )
+    selectFilterdProducts(state, filterTerm)
   );
   const [categories, setCategories] = useState<ICategoryWithItems<IProduct>[]>(
     []
@@ -33,15 +31,19 @@ export default function ProductsList({}: Props): ReactElement {
         (category) => category.name === product.category.name
       );
       category && category.items.push(product);
-      !category && tmp.push({ _id: product.category._id,name: product.category.name, items: [product] });
+      !category &&
+        tmp.push({
+          ...product.category,
+          items: [product],
+        });
     });
-
+    tmp.sort((a,b)=> a.name.localeCompare(b.name));
     setCategories([...tmp]);
     return () => {};
   }, [productStatus, filterTerm]);
 
   useEffect(() => {
-    setFilterTerm((router.query.name as string) ?? "");
+    setFilterTerm((router.query.filter as string) ?? "");
   }, [router.query]);
 
   useEffect(() => {
@@ -50,9 +52,6 @@ export default function ProductsList({}: Props): ReactElement {
     }
   }, [productStatus]);
 
-  categories.forEach(category=>{
-    console.log("🚀 ~ file: ProductsList.tsx ~ line 56 ~ ProductsList ~ category", category)
-  })
   return (
     <div className="mt-4 sm:mt-6 md:mt-8">
       {categories.map((category) => (

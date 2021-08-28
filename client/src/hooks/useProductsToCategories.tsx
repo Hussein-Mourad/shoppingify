@@ -5,6 +5,8 @@ import { ICategoryWithItems } from "types/Category";
 
 export default function useProductsToCategories<T>(products: T[], dependency?: Array<any>) {
   const [categories, setCategories] = useState<ICategoryWithItems<T>[]>([]);
+  
+  if (!dependency) dependency = products;
 
   useEffect(() => {
     let tmp: ICategoryWithItems<T>[] = [];
@@ -14,12 +16,12 @@ export default function useProductsToCategories<T>(products: T[], dependency?: A
         (category) => category.name === product.category.name
       );
       category && category.items.push(product);
-      !category && tmp.push({ name: product.category.name, items: [product] });
+      !category && tmp.push({ ...product.category, items: [product] });
     });
 
     setCategories([...tmp]);
     return () => {};
-  }, [dependency||products]);
+  }, [dependency]);
 
   return categories;
 }

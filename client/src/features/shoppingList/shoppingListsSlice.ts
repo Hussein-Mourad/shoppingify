@@ -6,23 +6,31 @@ import { setSideDrawerState } from "features/layouts/layoutSlice";
 import axios from "axios";
 
 
-const initialState: IShoppingList = {
-  name: "",
-  status: "current",
-  products: [],
-};
+const initialState: IShoppingList[] = [];
+
+
+export const fetchShoppingLists = createAsyncThunk("shoppingLists/fetchAll", async () => {
+  const response = await axios.get("/api/shoppingLists");
+  return response.data;  
+});
+
 
 export const addAsync = createAsyncThunk(
-  "shoppingList/addAsync",
+  "shoppingLists/fetchAll",
   async (shoppingList: IShoppingList) => {
-    try {
-      const response = await axios.post("/api/shoppingList/", shoppingList) ;
-      return response.data;
-    } catch (
-     error 
-    ) {
-      
-    }
+    const response = await fetch("/api/shoppinglist/", {
+      method: "POST",
+      body: JSON.stringify({
+        name: shoppingList.name,
+        products: shoppingList.products,
+        status: shoppingList.status,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data: IShoppingList = await response.json();
+    return data;
   }
 );
 

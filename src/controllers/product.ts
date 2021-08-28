@@ -22,7 +22,6 @@ async function createProduct(req: Request, res: Response) {
     let product = await Product.findOne({
       userId,
       name,
-      category: category._id,
     })
       .populate("category")
       .exec();
@@ -43,7 +42,7 @@ async function createProduct(req: Request, res: Response) {
     res.json({ product: { ...product._doc, category } });
   } catch (err) {
     console.error(err);
-    res.status(400).json(handleErrors(err));
+    res.status(403).json(handleErrors(err));
   }
 }
 
@@ -97,10 +96,10 @@ function handleErrors(err: { message: string; code: number; errors: any }) {
 
   if (err.message === "Category is not found") {
     errors.message = err.message;
-  } else if(err.message==="Product already exists.") {
-    errors.message=err.message;
+  } else if (err.message === "Product already exists.") {
+    errors.name = err.message;
+    return { errors };
   }
-
 
   if (err.errors) {
     Object.values(err.errors).forEach((value: any) => {

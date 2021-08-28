@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "app/hooks";
 import { setSideDrawerState } from "features/layouts/layoutSlice";
 import ICategory from "types/Category";
 import { addNewProduct } from "./productsSlice";
+import axios from "axios";
 
 type AddProductFromProps = React.FormHTMLAttributes<HTMLFormElement>;
 interface FormValues {
@@ -51,7 +52,7 @@ function AddProductFrom({ className }: AddProductFromProps): ReactElement {
     initialValues: { ...initialValues },
     validate,
     onSubmit: async (values, actions) => {
-      dispatch(
+       const result = await dispatch(
         addNewProduct({
           name: values.name.trim(),
           description: values.note?.trim(),
@@ -59,12 +60,16 @@ function AddProductFrom({ className }: AddProductFromProps): ReactElement {
           categoryName: values.category.trim(),
         })
       );
-      console.log("🚀 ~ file: AddProductForm.tsx ~ line 63 ~ onSubmit: ~ productErrors", productErrors)
+      
       if (productErrors) {
         actions.setErrors({
-          image: productErrors.imageUrl ?? "",
+          name: productErrors.name ?? "",
           note: productErrors.description ?? "",
+          image: productErrors.imageUrl ?? "",
+          category: productErrors.category ?? "",
         });
+      } else {
+        actions.resetForm();
       }
 
       actions.setSubmitting(false);
@@ -74,10 +79,9 @@ function AddProductFrom({ className }: AddProductFromProps): ReactElement {
   useEffect(() => {
     (async () => {
       try {
-        const response = await fetch("/api/categories");
-        const data = await response.json();
+        const response = await axios.get("/api/categories");
         let tmp: string[] = [];
-        data.categories.forEach((category: ICategory) => {
+        response.data.categories.forEach((category: ICategory) => {
           tmp.push(category.name);
         });
         setSuggestions(tmp);

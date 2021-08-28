@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { ReactElement } from "react";
 import { CircularProgress } from "@material-ui/core";
 import {useEffect, useState} from "react"
+import axios from "axios";
 
 interface Props {
   authType: "Login" | "Signup";
@@ -52,15 +53,8 @@ export default function AuthCard({ authType, url }: Props): ReactElement {
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch("/api/auth/", {
-          method: "POST",
-        });
-        const data = await res.json();
-        if (data.user) {
-          router.push("/");
-        } else {
-          setIsLoading(false);
-        }
+        await axios.post("/api/auth");
+        router.push("/");
       } catch (err) {
         setIsLoading(false);
       }
@@ -75,23 +69,22 @@ export default function AuthCard({ authType, url }: Props): ReactElement {
     onSubmit: async (values, actions) => {
       actions.setSubmitting(false);
       try {
-        const res = await fetch(url, {
-          method: "POST",
-          body: JSON.stringify(values),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const data = await res.json();
-        if (res.status === 201) {
-          router.push("/");
-        } else {
+        const response = await axios.post(url, values);
+        router.push("/");
+      } catch (err) {
+        if (err?.response?.data) {
+          const data  = err.response.data;
           actions.setErrors({
             username: data.errors.username,
-            password: data.errors.password || data.errors.message,
+            password:
+              data.errors.password ||
+              data.errors.message,
+          });
+        } else {
+          actions.setErrors({
+            password: "Unexpected error please try again.",
           });
         }
-      } catch (err) {
       }
     },
   });

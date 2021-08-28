@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import axios from "axios";
 
 interface IUser {
   _id: string;
@@ -14,19 +15,11 @@ export default function useAuthentication() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch("/api/auth/", {
-          method: "POST",
-        });
-        const data = await res.json();
-        if (data.user) {
-          setUser(data.user);
-          setIsLoading(false);
-        } else {
-          router.push("/login");
-        }
+        const response = await axios.post("/api/auth/");
+        setUser(response.data.user);
+        setIsLoading(false);
       } catch (err) {
         router.push("/login");
-        setIsLoading(false);
       }
     })();
 

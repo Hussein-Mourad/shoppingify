@@ -10,8 +10,8 @@ function Header(): ReactElement {
   const isSideDrawerOpen = useAppSelector(
     (state) => state.layout.isSideDrawerOpen
   );
-  const [searchValue, setSearchValue] = useState("");
   const router = useRouter();
+  const [searchValue, setSearchValue] = useState(router.query.filter || "");
 
   const titleStyle = cn(
     "flex-1  mb-3 text-2xl font-semibold text-trueGray-800 sm:mb-0 ",
@@ -50,7 +50,7 @@ function Header(): ReactElement {
           }}
           onKeyPress={(e) => {
             if (e.key === "Enter") {
-              searchValue && router.push("/?name=" + searchValue);
+              searchValue && router.push("/?filter=" + searchValue);
               !searchValue && router.push("/");
             }
           }}
