@@ -14,7 +14,7 @@ export default function CategoryGrid({
 }: Props): ReactElement {
   return (
     <div className={className}>
-      <h3 className="mb-3 text-lg font-medium">{name}</h3>
+      <h3 className="mb-2 text-lg font-medium">{name}</h3>
       <Grid className="mb-5">{children}</Grid>
     </div>
   );

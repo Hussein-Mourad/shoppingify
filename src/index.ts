@@ -3,7 +3,6 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import express, { Application } from "express";
 import session from "express-session";
-// import createError from "http-errors";
 import logger from "morgan";
 import path from "path";
 import connectDB from "./config/db";
@@ -22,7 +21,6 @@ connectDB(() => {
   console.info("Listening on http://localhost:" + port);
 });
 
-// view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
@@ -48,28 +46,5 @@ app.use("/api/auth/", authRouter);
 app.use("/api/products/", productRouter);
 app.use("/api/categories/", categoryRouter);    
 app.use("/api/shoppinglist/", shoppingListRouter);
-
-// // catch 404 and forward to error handler
-// app.use(function (req, res, next) {
-// next(createError(404));
-// });
-
-// error handler
-// app.use(function (
-//   err,
-//   req,
-//   res: Response,
-//   next: NextFunction
-// ) {
-//   // set locals, only providing error in development
-//   // @ts-ignore
-//   res.locals.message = err.message;
-//   res.locals.error = req.app.get("env") === "development" ? err : {};
-
-//   // render the error page
-//   // @ts-ignore
-//   res.status(err.status || 500);
-//   res.render("error");
-// });
 
 export default app;

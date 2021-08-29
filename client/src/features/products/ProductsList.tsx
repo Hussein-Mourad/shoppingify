@@ -50,7 +50,7 @@ export default function ProductsList({}: Props): ReactElement {
     if (productStatus === "idle") {
       dispatch(fetchProducts());
     }
-  }, [productStatus]);
+  }, [productStatus, dispatch]);
 
   return (
     <div className="mt-4 sm:mt-6 md:mt-8">

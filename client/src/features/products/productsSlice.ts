@@ -1,16 +1,19 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { AppState } from "app/store";
+import type { AppState, AppThunk } from "app/store";
 import axios from "axios";
+import { setSideDrawerState } from "features/layouts/layoutSlice";
 import IProduct from "types/Product";
 
 export interface IProductsState {
   products: IProduct[];
+  productWithDetails: IProduct;
   status: "idle" | "loading" | "failed" | "success";
   errors: any;
 }
 
 const initialState: IProductsState = {
   products: [],
+  productWithDetails: { _id: "", name: "", category: { _id: "", name: "" } },
   status: "idle",
   errors: null,
 };
@@ -51,15 +54,34 @@ export const addNewProduct = createAsyncThunk(
 export const productsSlice = createSlice({
   name: "products",
   initialState,
-  reducers: {},
+  reducers: {
+    changeCurrentProduct: (
+      state: IProductsState,
+      action: PayloadAction<IProduct>
+    ) => {
+      state.productWithDetails = action.payload;
+    },
+    setStatus: (
+      state: IProductsState,
+      action: PayloadAction<{
+        status: "idle" | "loading" | "failed" | "success";
+        errors: any;
+      }>
+    ) => {
+      state.status = action.payload.status;
+      state.errors = action.payload.errors;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchProducts.pending, (state) => {
         state.status = "loading";
+        state.errors = null;
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.status = "success";
         state.products = action.payload.products;
+        state.errors = null;
       })
       .addCase(fetchProducts.rejected, (state) => {
         state.status = "failed";
@@ -68,7 +90,7 @@ export const productsSlice = createSlice({
       .addCase(addNewProduct.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(addNewProduct.rejected, (state, action:PayloadAction<any>) => {
+      .addCase(addNewProduct.rejected, (state, action: PayloadAction<any>) => {
         state.status = "failed";
         state.errors = action.payload.data;
       })
@@ -79,6 +101,41 @@ export const productsSlice = createSlice({
   },
 });
 
+export const showProductDetails = (product: IProduct): AppThunk => (
+  dispatch,
+  getState
+) => {
+  dispatch(productsSlice.actions.changeCurrentProduct(product));
+  dispatch(
+    setSideDrawerState({
+      isSideDrawerOpen: true,
+      sideDrawerType: "viewContent",
+    })
+  );
+};
+
+export const deleteProduct = (product: IProduct): AppThunk => async (
+  dispatch,
+  getState
+) => {
+  try {
+    await axios.delete("/api/products" + product._id);
+    dispatch(
+      setSideDrawerState({
+        isSideDrawerOpen: false,
+        sideDrawerType: "viewContent",
+      })
+    );
+  } catch (error) {
+    dispatch(
+      productsSlice.actions.setStatus({
+        status: "failed",
+        errors: "Error deleting the product",
+      })
+    );
+  }
+};
+
 export const selectAllProducts = (state: AppState) => state.products.products;
 export const selectFilterdProducts = (state: AppState, filterTerm: string) =>
   state.products.products.filter(
@@ -86,5 +143,7 @@ export const selectFilterdProducts = (state: AppState, filterTerm: string) =>
       product.name.toLowerCase().includes(filterTerm.toLowerCase()) ||
       product.category.name.toLowerCase().includes(filterTerm.toLowerCase())
   );
+export const selectViewedProduct = (state: AppState) =>
+  state.products.productWithDetails;
 
 export default productsSlice.reducer;

@@ -7,6 +7,10 @@ html {
   scroll-margin-top: 2rem;
 }
 
+html, body{
+  @apply h-full min-h-screen;
+}
+
 *:focus {
   -webkit-tap-highlight-color: transparent;
   -ms-touch-action: manipulation;
@@ -70,6 +74,15 @@ html {
 
 button, a{
   @apply focus-visible:ring-2 focus-visible:ring-black/90 !important;
+}
+
+.scrollbar-hidden::-webkit-scrollbar{
+  display: none;
+}
+
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 

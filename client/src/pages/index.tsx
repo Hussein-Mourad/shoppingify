@@ -16,7 +16,7 @@ export default function Home() {
     );
 
   return (
-    <TwoSideBarsLayout sideDrawer={<ShoppingList />}>
+    <TwoSideBarsLayout>
       <div className="min-h-screen p-2 sm:p-4 md:p-6">
         <Header />
         <ProductsList />

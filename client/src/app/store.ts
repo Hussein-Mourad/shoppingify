@@ -1,12 +1,11 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import shoppingList from "features/shoppingList/shoppingListSlice";
-import layout from "features/layouts/layoutSlice"
-import productDetails from "features/productDetails/productDetailsSlice"
-import products from "features/products/productsSlice"
+import layout from "features/layouts/layoutSlice";
+import products from "features/products/productsSlice";
 
 export function makeStore() {
   return configureStore({
-    reducer: {  shoppingList , layout, productDetails, products },
+    reducer: { shoppingList, layout, products },
   });
 }
 

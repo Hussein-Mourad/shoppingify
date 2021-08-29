@@ -32,7 +32,7 @@ async function createOrUpdateCurrentShoppingList(req: Request, res: Response) {
   if (!products) products = [];
   try {
     await checkProducts(products);
-    let shoppingList = await ShoppingList.findOne({ status: "current" });
+    let shoppingList = await ShoppingList.findOne({userId, status: "current" });
     if (shoppingList) {
       await ShoppingList.updateOne(
         { _id: shoppingList._id, userId },
@@ -48,7 +48,7 @@ async function createOrUpdateCurrentShoppingList(req: Request, res: Response) {
         products,
       });
     }
-    shoppingList = await ShoppingList.findOne({ status })
+    shoppingList = await ShoppingList.findOne({userId, status })
       .populate("products.category")
       .exec();
     res.json({ shoppingList });
@@ -59,10 +59,13 @@ async function createOrUpdateCurrentShoppingList(req: Request, res: Response) {
 }
 
 async function findUserShoppingLists(req: Request, res: Response) {
+  const { status } = req.query;
   const userId = res.locals.user?._id;
+  let filter: any = { userId };
+  if (status) filter = { ...filter, status };
 
   try {
-    const shoppingLists = await ShoppingList.find({ userId })
+    const shoppingLists = await ShoppingList.find(filter)
       .sort({ createdAt: -1 })
       .populate("products.category")
       .exec();

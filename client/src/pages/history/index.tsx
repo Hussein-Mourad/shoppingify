@@ -1,7 +1,7 @@
-import OneSideBarLayout from "features/layouts/OneSideBarLayout";
+import TwoSideBarsLayout from "features/layouts/TwoSideBarsLayout";
 import useAuthentication from "hooks/useAuthentication";
-import Head from "next/head";
 import { CircularProgress } from "@material-ui/core";
+import ShoppingLists from "features/shoppingList/ShoppingLists";
 
 export default function Home() {
   const { user, isLoading } = useAuthentication();
@@ -15,14 +15,13 @@ export default function Home() {
   }
 
   return (
-    <div className="">
-      <OneSideBarLayout>
-        <div className="min-h-screen p:2 sm:p-4 md:p-6">
-          <h1 className="mb-3 text-2xl font-medium sm:mb-5">
+      <TwoSideBarsLayout>
+        <div className="min-h-screen p-2 sm:p-4 md:p-6">
+          <h1 className="mb-3 text-2xl font-semibold sm:mb-5 text-trueGray-700">
             Shopping history
           </h1>
+          <ShoppingLists />
         </div>
-      </OneSideBarLayout>
-    </div>
+      </TwoSideBarsLayout>
   );
 }

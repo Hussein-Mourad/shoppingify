@@ -5,8 +5,7 @@ import Card from "components/shared/Card";
 import React, { ReactElement } from "react";
 import IProduct from "types/Product";
 import { addProduct } from "features/shoppingList/shoppingListSlice";
-import { setSideDrawerState } from "features/layouts/layoutSlice";
-import { showProductDetails } from "features/productDetails/productDetailsSlice";
+import { showProductDetails } from "features/products/productsSlice";
 
 interface Props {
   item: IProduct;
@@ -23,12 +22,6 @@ export default function ProductCard({ item }: Props): ReactElement {
             className="w-full h-full font-medium text-left break-all hover:text-yellow-primary active:text-yellow-600/90"
             onClick={() => {
               dispatch(showProductDetails(item));
-              dispatch(
-                setSideDrawerState({
-                  isSideDrawerOpen: true,
-                  sideDrawerType: "viewContent",
-                })
-              );
             }}
             justify="start"
           >

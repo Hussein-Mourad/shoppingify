@@ -6,13 +6,17 @@ import Button from "components/shared/Button";
 import Image from "next/image";
 import bottleImg from "public/img/bottle.svg";
 import shoppingCartImg from "public/img/shopping.svg";
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import {
   selectShoppingList,
   incrementQuantity,
   decrementQuantity,
   toggleComplete,
   removeProduct,
+  fetchShoppingist,
+  createOrUpdateShoppingList,
+  cancelList,
+  completeList,
 } from "./shoppingListSlice";
 import { setSideDrawerState } from "features/layouts/layoutSlice";
 import { IShoppingListItem } from "types/ShoppingList";
@@ -21,8 +25,20 @@ import ShoppingListForm from "./ShoppingListForm";
 function ShoppingList() {
   const dispatch = useAppDispatch();
   const shoppingList = useAppSelector(selectShoppingList);
-  const [editList, setEditList] = useState(shoppingList.name === "");
+  const shoppingListStatus = useAppSelector(
+    (state) => state.shoppingList.status
+  );
+  const [editList, setEditList] = useState(!shoppingList.name);
   const categories = useProductsToCategories(shoppingList.products);
+
+  useEffect(() => {
+    if (shoppingListStatus === "idle") {
+      dispatch(fetchShoppingist());
+    }
+    if (shoppingListStatus == "success") {
+      setEditList(!shoppingList.name);
+    }
+  }, [shoppingListStatus]);
 
   const toggleEditList = () => {
     setEditList(!editList);
@@ -30,7 +46,7 @@ function ShoppingList() {
 
   return (
     <div className="bg-[#FFF0DE] w-full h-full flex flex-col justify-between">
-      <div className="flex flex-col h-full px-4 overflow-auto pt-7 lg:px-6 sidedrawer-scrollbar">
+      <div className="flex flex-col h-full px-4 overflow-auto pt-7 lg:px-6 scrollbar-hidden">
         <div className="bg-[#80485B] flex rounded-3xl w-full mx-auto p-3 sm:p-4  text-white font-bold text-lg">
           <div className="flex items-center justify-center w-1/3">
             <Image src={bottleImg} alt="bottle" width="80" height="120" />
@@ -115,7 +131,7 @@ function ShoppingList() {
           <>
             <Button
               className="px-5 py-3 mr-2 rounded-xl"
-              onClick={() => {}}
+              onClick={() => dispatch(cancelList())}
               aria-label="modal cancel button"
               link
             >
@@ -124,7 +140,7 @@ function ShoppingList() {
             <Button
               className="px-5 py-3 text-white rounded-xl"
               color="blue"
-              onClick={() => {}}
+              onClick={() => dispatch(completeList())}
               aria-label="modal confirm button"
             >
               Complete

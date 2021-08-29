@@ -1,28 +1,25 @@
 import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import Image from "next/image";
 import React from "react";
-import IProduct from "types/Product";
 import Button from "components/shared/Button";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import { addProduct } from "features/shoppingList/shoppingListSlice";
-import { setSideDrawerState } from "features/layouts/layoutSlice";
+import { selectViewedProduct, deleteProduct } from "features/products/productsSlice";
 
 type Props = {
   className?: string;
   onClose: () => void;
-  onDelete: () => void;
-  onAddToList: () => void;
 };
 
-function ItemDetails({ className, onClose, onDelete, onAddToList }: Props) {
+function Product({ className, onClose }: Props) {
   const dispatch = useAppDispatch();
-  const product = useAppSelector((state) => state.productDetails.product);
+  const product = useAppSelector(selectViewedProduct);
 
   const itemDataStyles = "mb-4 font-medium";
   const itemTitleStyles = "text-xs text-gray-500 mb-1";
   return (
     <div className={`${className} bg-white flex flex-col h-full w-full`}>
-      <div className="flex-1 w-full px-5 overflow-auto sidedrawer-scrollbar">
+      <div className="flex-1 w-full px-5 overflow-auto scrollbar-hidden">
         <div>
           <Button
             className="mt-4 mb-8 text-sm text-yellow-primary"
@@ -67,7 +64,7 @@ function ItemDetails({ className, onClose, onDelete, onAddToList }: Props) {
       <div className="flex items-center justify-center w-full h-24 px-5 bg-white sm:h-28">
         <Button
           className="px-5 py-3 mr-2 rounded-xl"
-          onClick={onDelete}
+          onClick={()=>dispatch(deleteProduct(product))}
           aria-label="modal cancel button"
           link
         >
@@ -86,4 +83,4 @@ function ItemDetails({ className, onClose, onDelete, onAddToList }: Props) {
   );
 }
 
-export default ItemDetails;
+export default Product;

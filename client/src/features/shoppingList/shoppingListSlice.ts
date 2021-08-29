@@ -5,36 +5,54 @@ import IProduct from "types/Product";
 import { setSideDrawerState } from "features/layouts/layoutSlice";
 import axios from "axios";
 
+export interface IShoppingListState {
+  shoppingList: IShoppingList;
+  status: "idle" | "loading" | "failed" | "success";
+  error: any;
+}
 
-const initialState: IShoppingList = {
-  name: "",
-  status: "current",
-  products: [],
+const initialState: IShoppingListState = {
+  shoppingList: {
+    _id: "",
+    name: "",
+    status: "current",
+    products: [],
+    createdAt: "" 
+  },
+  status: "idle",
+  error: null,
 };
 
-export const addAsync = createAsyncThunk(
-  "shoppingList/addAsync",
-  async (shoppingList: IShoppingList) => {
-    try {
-      const response = await axios.post("/api/shoppingList/", shoppingList) ;
-      return response.data;
-    } catch (
-     error 
-    ) {
-      
-    }
+export const fetchShoppingist = createAsyncThunk(
+  "shoppingList/fetchShoppingist",
+  async () => {
+    const response = await axios.get("/api/shoppinglist?status=current");
+    return response.data;
   }
 );
+
+export const createOrUpdateShoppingList = createAsyncThunk(
+  "shoppingList/updateShoppingList",
+  async (shoppingList: IShoppingList) => {
+    const response = await axios.post("/api/shoppinglist/", shoppingList);
+    return response.data;
+  }
+);
+
+export const deleteProduct = createAsyncThunk("shoppingList/deleteProduct", async(product:IProduct)=>{
+  const response =  await axios.delete("/api/products/"+product._id);
+  return response.data
+}) 
 
 export const shoppingListSlice = createSlice({
   name: "shoppingList",
   initialState,
   reducers: {
-    changeName: (state: IShoppingList, action: PayloadAction<string>) => {
-      if (action.payload) state.name = action.payload;
+    changeName: (state: IShoppingListState, action: PayloadAction<string>) => {
+      if (action.payload) state.shoppingList.name = action.payload;
     },
-    addProductToList: (
-      state: IShoppingList,
+    addProduct: (
+      state: IShoppingListState,
       action: PayloadAction<IProduct>
     ) => {
       const item: IShoppingListItem = {
@@ -42,90 +60,177 @@ export const shoppingListSlice = createSlice({
         quantity: 1,
         completed: false,
       };
-      const product = state.products.find(
+      const product = state.shoppingList.products.find(
         (product) => product.name === action.payload.name
       );
-      !product && state.products.push(item);
+      !product && state.shoppingList.products.push(item);
     },
     removeProduct: (
-      state: IShoppingList,
+      state: IShoppingListState,
       action: PayloadAction<IShoppingListItem>
     ) => {
-      state.products = state.products.filter(
+      state.shoppingList.products = state.shoppingList.products.filter(
         (product) => product.name != action.payload.name
       );
     },
     incrementQuantity: (
-      state: IShoppingList,
+      state: IShoppingListState,
       action: PayloadAction<IShoppingListItem>
     ) => {
-      let product = state.products.find(
+      let product = state.shoppingList.products.find(
         (product) => product.name === action.payload.name
       );
       product && product.quantity++;
     },
     decrementQuantity: (
-      state: IShoppingList,
+      state: IShoppingListState,
       action: PayloadAction<IShoppingListItem>
     ) => {
-      let product = state.products.find(
+      let product = state.shoppingList.products.find(
         (product) => product.name === action.payload.name
       );
       product && (product.quantity = Math.max(product.quantity - 1, 1));
     },
     toggleComplete: (
-      state: IShoppingList,
+      state: IShoppingListState,
       action: PayloadAction<IShoppingListItem>
     ) => {
-      let product = state.products.find(
+      let product = state.shoppingList.products.find(
         (product) => product.name === action.payload.name
       );
       product && (product.completed = !product.completed);
     },
-    completeList: (state: IShoppingList) => {
-      state.status = "completed";
+    completeList: (state: IShoppingListState) => {
+      state.shoppingList.status = "completed";
     },
-    cancelList: (state: IShoppingList) => {
-      state.status = "cancelled";
+    cancelList: (state: IShoppingListState) => {
+      state.shoppingList.status = "cancelled";
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(addAsync.fulfilled, (state, action) => {
-      state.name = action.payload.name;
-      state.products = action.payload.products;
-      state.status = action.payload.status;
-    });
+    builder
+      .addCase(fetchShoppingist.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(fetchShoppingist.fulfilled, (state, action) => {
+        const lists = action.payload.shoppingLists;
+        if (lists.length > 0) state.shoppingList = lists[0];
+        state.status = "success";
+        state.error = null;
+      })
+      .addCase(fetchShoppingist.rejected, (state) => {
+        state.status = "failed";
+        state.error = "Error getting shopping list data";
+      })
+      .addCase(createOrUpdateShoppingList.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(createOrUpdateShoppingList.fulfilled, (state, action) => {
+        const list = action.payload.shoppingList;
+        if (list.status === "current") {
+          state.shoppingList = action.payload.shoppingList;
+        } else {
+          state.shoppingList = initialState.shoppingList;
+        }
+        state.status = "success";
+        state.error = null;
+      })
+      .addCase(createOrUpdateShoppingList.rejected, (state) => {
+        state.status = "failed";
+        state.error = "Error updating shopping list data";
+      }).addCase(deleteProduct.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.status = "success";
+        state.error = null;
+      })
+      .addCase(deleteProduct.rejected, (state) => {
+        state.status = "failed";
+        state.error = "Error deleting product";
+      });
   },
 });
 
-export const selectShoppingList = (state: AppState) => state.shoppingList;
+export const selectShoppingList = (state: AppState) =>
+  state.shoppingList.shoppingList;
 export const selectProductsCount = (state: AppState) =>
-  state.shoppingList.products.length;
-
-export const {
-  changeName,
-  removeProduct,
-  incrementQuantity,
-  decrementQuantity,
-  toggleComplete,
-  completeList,
-  cancelList,
-} = shoppingListSlice.actions;
+  state.shoppingList.shoppingList.products.length;
 
 export const addProduct = (product: IProduct): AppThunk => (
   dispatch,
   getState
 ) => {
-  dispatch(shoppingListSlice.actions.addProductToList(product));
+  dispatch(shoppingListSlice.actions.addProduct(product));
   dispatch(
     setSideDrawerState({
       isSideDrawerOpen: true,
       sideDrawerType: "shoppingList",
     })
   );
-  // dispatch(addAsync(getState().shoppingList));
+  dispatch(createOrUpdateShoppingList(getState().shoppingList.shoppingList));
 };
 
 
+
+export const removeProduct = (product: IShoppingListItem): AppThunk => (
+  dispatch,
+  getState
+) => {
+  dispatch(shoppingListSlice.actions.removeProduct(product));
+  dispatch(createOrUpdateShoppingList(getState().shoppingList.shoppingList));
+};
+
+export const incrementQuantity = (product: IShoppingListItem): AppThunk => (
+  dispatch,
+  getState
+) => {
+  dispatch(shoppingListSlice.actions.incrementQuantity(product));
+  dispatch(createOrUpdateShoppingList(getState().shoppingList.shoppingList));
+};
+
+export const decrementQuantity = (product: IShoppingListItem): AppThunk => (
+  dispatch,
+  getState
+) => {
+  dispatch(shoppingListSlice.actions.decrementQuantity(product));
+  dispatch(createOrUpdateShoppingList(getState().shoppingList.shoppingList));
+};
+
+export const changeName = (name: string): AppThunk => (dispatch, getState) => {
+  dispatch(shoppingListSlice.actions.changeName(name));
+  dispatch(createOrUpdateShoppingList(getState().shoppingList.shoppingList));
+};
+
+export const toggleComplete = (product: IShoppingListItem): AppThunk => (
+  dispatch,
+  getState
+) => {
+  dispatch(shoppingListSlice.actions.toggleComplete(product));
+  dispatch(createOrUpdateShoppingList(getState().shoppingList.shoppingList));
+};
+export const completeList = (): AppThunk => (dispatch, getState) => {
+  dispatch(shoppingListSlice.actions.completeList());
+  dispatch(
+    setSideDrawerState({
+      isSideDrawerOpen: false,
+      sideDrawerType: "shoppingList",
+    })
+  );
+  dispatch(createOrUpdateShoppingList(getState().shoppingList.shoppingList));
+};
+export const cancelList = (): AppThunk => (dispatch, getState) => {
+  dispatch(shoppingListSlice.actions.cancelList());
+  dispatch(
+    setSideDrawerState({
+      isSideDrawerOpen: false,
+      sideDrawerType: "shoppingList",
+    })
+  );
+  dispatch(createOrUpdateShoppingList(getState().shoppingList.shoppingList));
+};
 
 export default shoppingListSlice.reducer;

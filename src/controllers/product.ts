@@ -42,7 +42,7 @@ async function createProduct(req: Request, res: Response) {
     res.json({ product: { ...product._doc, category } });
   } catch (err) {
     console.error(err);
-    res.status(403).json(handleErrors(err));
+    res.status(400).json(handleErrors(err));
   }
 }
 

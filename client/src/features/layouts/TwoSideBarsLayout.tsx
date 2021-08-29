@@ -6,14 +6,13 @@ import { AppState } from "app/store";
 import { toggleSideDrawer, setSideDrawerState } from "./layoutSlice";
 import AddProductFrom from "features/products/AddProductForm";
 import ShoppingList from "features/shoppingList/ShoppingList";
-import ItemDetails from "features/productDetails/ItemDetails";
+import Product from "features/products/Product";
 
 type Props = {
   children: React.ReactNode;
-  sideDrawer: React.ReactNode;
 };
 
-export default function Layout({ children, sideDrawer }: Props) {
+export default function Layout({ children }: Props) {
   const dispatch = useAppDispatch();
   const { isSideDrawerOpen, sideDrawerType } = useAppSelector(
     (state: AppState) => state.layout
@@ -36,6 +35,7 @@ export default function Layout({ children, sideDrawer }: Props) {
     }
   };
 
+
   return (
     <div className="w-full min-h-screen">
       <SideBar sideDrawerHandler={handleSideDrawer} />
@@ -48,7 +48,7 @@ export default function Layout({ children, sideDrawer }: Props) {
             ) : sideDrawerType === "addForm" ? (
               <AddProductFrom />
             ) : (
-              <ItemDetails
+              <Product
                 onClose={() =>
                   dispatch(
                     setSideDrawerState({
@@ -57,8 +57,6 @@ export default function Layout({ children, sideDrawer }: Props) {
                     })
                   )
                 }
-                onDelete={() => {}}
-                onAddToList={() => {}}
               />
             )}
           </div>

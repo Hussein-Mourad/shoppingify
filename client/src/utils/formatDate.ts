@@ -1,4 +1,5 @@
 export default function formatDate(date: Date): string {
+  
   let weekday = new Intl.DateTimeFormat("en", { weekday: "short" }).format(
     date
   );

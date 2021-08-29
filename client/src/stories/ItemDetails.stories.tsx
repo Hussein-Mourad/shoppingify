@@ -1,17 +1,17 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import React from "react";
-import ItemDetails from "../features/productDetails/ItemDetails";
+import Product from "../features/products/Product";
 
 export default {
   title: "Components/ItemDetails",
-  component: ItemDetails,
+  component: Product,
   argTypes: {
     number: { control: "number" },
   },
-} as ComponentMeta<typeof ItemDetails>;
+} as ComponentMeta<typeof Product>;
 
-const Template: ComponentStory<typeof ItemDetails> = (args) => (
-    <ItemDetails {...args} />
+const Template: ComponentStory<typeof Product> = (args) => (
+    <Product {...args} />
 );
 
 export const Default = Template.bind({});

@@ -2,8 +2,8 @@ import { ReactElement, SetStateAction } from "react";
 import InputGroup from "components/shared/InputGroup";
 import Button from "components/shared/Button";
 import { useAppDispatch, useAppSelector } from "app/hooks";
-import { changeName } from "./shoppingListSlice";
-import { useState, Dispatch } from "react";
+import { changeName, selectShoppingList } from "./shoppingListSlice";
+import { useState,Dispatch, useEffect } from "react";
 import cn from "classnames";
 
 interface Props {
@@ -12,15 +12,26 @@ interface Props {
 
 export default function ShoppingListForm({ setEditList }: Props): ReactElement {
   const dispatch = useAppDispatch();
-  const name = useAppSelector((state) => state.shoppingList.name);
-  const [value, setValue] = useState(name);
+  const shoppingList = useAppSelector(selectShoppingList);
+  const shoppingListStatus = useAppSelector(state=>state.shoppingList.status);
+  const [value, setValue] = useState(shoppingList.name);
+
+  useEffect(() => {
+    if(shoppingListStatus=="success"){
+      setValue(shoppingList.name)
+    }
+    return () => {
+      
+    }
+  }, [shoppingListStatus])
 
   const inputStyle = cn(
     "border-2",
     {
-      "border-yellow-primary caret-yellow-primary focus-within:border-yellow-600/75 hover:border-yellow-primary/90 focus-visible:border-black/90": value,
+      "border-yellow-primary caret-yellow-primary focus-within:border-yellow-600/75 hover:border-yellow-primary/90 focus-visible:border-black/90":
+        value && shoppingList.products.length > 0,
     },
-    { "border-gray-300": !value }
+    { "border-gray-300": !value || shoppingList.products.length == 0 }
   );
   return (
     <form
@@ -43,7 +54,7 @@ export default function ShoppingListForm({ setEditList }: Props): ReactElement {
               dispatch(changeName(value));
               setEditList(false);
             }}
-            disabled={value === ""}
+            disabled={!value || shoppingList.products.length == 0}
           >
             Save
           </Button>

@@ -27,7 +27,6 @@ async function login(req: Request, res: Response) {
       username: user.username,
     });
   } catch (err) {
-    // console.error(err);
     res.status(401).json(handleErrors(err));
   }
 }

@@ -24,7 +24,7 @@ export default function SideBarLink({
 
           {tooltip && (
             <div
-              className="absolute hidden translate-x-4 -translate-y-1/2 left-full top-1/2 group-hover:block"
+              className="absolute hidden translate-x-4 -translate-y-1/2 left-full top-1/2 group-hover:block group-focus-visible:block"
               tabIndex={-1}
             >
               <span className="relative block px-5 py-1 text-white rounded-md bg-trueGray-700">

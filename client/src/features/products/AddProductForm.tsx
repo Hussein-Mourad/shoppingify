@@ -97,7 +97,7 @@ function AddProductFrom({ className }: AddProductFromProps): ReactElement {
         onSubmit={formik.handleSubmit}
         autoComplete="off"
       >
-        <div className="flex-1 w-full px-5 pt-4 overflow-auto sidedrawer-scrollbar">
+        <div className="flex-1 w-full px-5 pt-4 overflow-auto scrollbar-hidden">
           <div>
             <h1 className="mb-5 text-2xl font-semibold">Add a new item</h1>
             <InputGroup
