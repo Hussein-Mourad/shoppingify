@@ -9,12 +9,12 @@
   "scripts": {
     "start": "node ./dist/app.bundle.js",
     "build": "tsc -p .",
-    "webpack": "webpack",
+    "build:webpack": "webpack",
     "dev": "kill-port 8000 3000;npm-run-all --parallel dev:server dev:client",
     "dev:server": "kill-port 8000; DEBUG=shoppingify:* nodemon ./src/index.ts",
     "dev:client": "kill-port 3000; npm run dev --prefix client",
-    "test": "kill-port 8000; $npm_package_config_dbtest; env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }'; mocha --timeout 5000 -r ts-node/register 'tests/*.ts'"
-,"deploy": "git add .; git commit -am \"heroku release\"; git push heroku master"
+    "test": "kill-port 8000; $npm_package_config_dbtest; env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }'; mocha --timeout 5000 -r ts-node/register 'tests/*.ts'",
+    "deploy": "./deploy.sh"
   },
   "config": {
     "dbtest": "env NODE_ENV=test DB_URI=mongodb://127.0.0.1:27017/local-testing?directConnection=true&serverSelectionTimeoutMS=2000&retryWrites=true;"
