@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Product from "../models/Product";
 import ShoppingList from "../models/ShoppingList";
+import category from "./category";
 
 async function createShoppingList(req: Request, res: Response) {
   const userId = res.locals.user?._id;
@@ -32,7 +33,10 @@ async function createOrUpdateCurrentShoppingList(req: Request, res: Response) {
   if (!products) products = [];
   try {
     await checkProducts(products);
-    let shoppingList = await ShoppingList.findOne({userId, status: "current" });
+    let shoppingList = await ShoppingList.findOne({
+      userId,
+      status: "current",
+    });
     if (shoppingList) {
       await ShoppingList.updateOne(
         { _id: shoppingList._id, userId },
@@ -48,7 +52,7 @@ async function createOrUpdateCurrentShoppingList(req: Request, res: Response) {
         products,
       });
     }
-    shoppingList = await ShoppingList.findOne({userId, status })
+    shoppingList = await ShoppingList.findOne({ userId, status })
       .populate("products.category")
       .exec();
     res.json({ shoppingList });
@@ -113,6 +117,62 @@ async function updateShoppingListById(req: Request, res: Response) {
   }
 }
 
+async function getStatistics(req: Request, res: Response) {
+  const userId = res.locals.user?._id;
+  var products: any = [];
+  var categories: any = [];
+  try {
+    const shoppingLists: any = await ShoppingList.find({ userId })
+      .sort({ createdAt: -1 })
+      .populate("products.category")
+      .exec();
+// TODO: Finish this endpoint
+     await shoppingLists.forEach((shoppingList: any) => {
+      shoppingList._doc.products.forEach(async (product: any) => {
+        const productInDB = await Product.findOne({userId, _id:product._doc._id});
+        if (productInDB) {
+          let findResult = products.find((product: any) => {
+            console.log(
+              "🚀 ~ file: shoppingList.ts ~ line 136 ~ shoppingList._doc.products.forEach ~ product._id === productInDB._id",
+              product.name,
+              productInDB.name
+            );
+            return product.name === productInDB.name;
+          });
+          console.log(
+            "🚀 ~ file: shoppingList.ts ~ line 137 ~ shoppingList._doc.products.forEach ~ findResult",
+            findResult
+          );
+          if (findResult) {
+            findResult.count++;
+          } else {
+            products.push({ ...product._doc, count: 1 });
+            // console.log("🚀 ~ file: shoppingList.ts ~ line 142 ~ shoppingList._doc.products.forEach ~ products", products)
+          }
+        }
+
+        // let findResult = categories.find(
+        //   //@ts-ignore
+        //   (category: any) => category._id === product._doc.category._id
+        //   );
+        //   if (findResult) {
+        //     findResult.count++;
+        // } else {
+        //   categories.push({ ...category._doc, count: 1 });
+        // }
+      });
+    });
+    console.log(
+      "🚀 ~ file: shoppingList.ts ~ line 137 ~ shoppingList._doc.products.forEach ~ products",
+      products
+    );
+
+    res.json({ products, categories });
+  } catch (err) {
+    res.status(400).json({ shoppingLists: null });
+  }
+}
+
 async function checkProducts(products: any) {
   for (const product of products) {
     if (product._id.length !== 12 && product._id.length !== 24)
@@ -143,4 +203,5 @@ export default {
   findUserShoppingLists,
   findUserShoppingListById,
   updateShoppingListById,
+  getStatistics,
 };

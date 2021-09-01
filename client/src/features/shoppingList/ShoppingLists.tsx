@@ -30,7 +30,7 @@ export default function ShoppingLists({}: Props): ReactElement {
   useEffect(() => {
     (async () => {
       try {
-        const response = await axios.get("api/shoppinglist/");
+        const response = await axios.get("api/shoppinglists/");
         setShoppingLists(response.data.shoppingLists);
       } catch (error) {
         setError("Couldn't find items.");

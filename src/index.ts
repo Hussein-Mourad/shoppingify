@@ -45,6 +45,6 @@ app.use(
 app.use("/api/auth/", authRouter);
 app.use("/api/products/", productRouter);
 app.use("/api/categories/", categoryRouter);    
-app.use("/api/shoppinglist/", shoppingListRouter);
+app.use("/api/shoppinglists/", shoppingListRouter);
 
 export default app;

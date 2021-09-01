@@ -61,13 +61,12 @@ export const productsSlice = createSlice({
     ) => {
       state.productWithDetails = action.payload;
     },
-    setStatus: (
+    setState: (
       state: IProductsState,
-      action: PayloadAction<{
-        status: "idle" | "loading" | "failed" | "success";
-        errors: any;
-      }>
+      action: PayloadAction<IProductsState>
     ) => {
+      state.products = action.payload.products;
+      state.productWithDetails = action.payload.productWithDetails;
       state.status = action.payload.status;
       state.errors = action.payload.errors;
     },
@@ -118,17 +117,36 @@ export const deleteProduct = (product: IProduct): AppThunk => async (
   dispatch,
   getState
 ) => {
+  dispatch(
+    productsSlice.actions.setState({
+      ...getState().products,
+      status: "loading",
+      errors: null,
+    })
+  );
   try {
-    await axios.delete("/api/products" + product._id);
+    await axios.delete("/api/products/" + product._id);
     dispatch(
       setSideDrawerState({
         isSideDrawerOpen: false,
         sideDrawerType: "viewContent",
       })
     );
-  } catch (error) {
     dispatch(
-      productsSlice.actions.setStatus({
+      productsSlice.actions.setState({
+        ...getState().products,
+        products: getState().products.products.filter(
+          (item) => item._id !== product._id
+        ),
+        status: "success",
+        errors: null,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(
+      productsSlice.actions.setState({
+        ...getState().products,
         status: "failed",
         errors: "Error deleting the product",
       })

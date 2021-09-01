@@ -14,6 +14,7 @@
     "dev:server": "kill-port 8000; DEBUG=shoppingify:* nodemon ./src/index.ts",
     "dev:client": "kill-port 3000; npm run dev --prefix client",
     "test": "kill-port 8000; $npm_package_config_dbtest; env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }'; mocha --timeout 5000 -r ts-node/register 'tests/*.ts'"
+,"deploy": "git add .; git commit -am \"heroku release\"; git push heroku master"
   },
   "config": {
     "dbtest": "env NODE_ENV=test DB_URI=mongodb://127.0.0.1:27017/local-testing?directConnection=true&serverSelectionTimeoutMS=2000&retryWrites=true;"

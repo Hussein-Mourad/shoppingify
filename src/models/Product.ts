@@ -1,4 +1,4 @@
-import { Document, model, PopulatedDoc, Schema } from "mongoose";
+import { Document, model,Model, PopulatedDoc, Schema } from "mongoose";
 import { ICategory } from "./Category";
 import isValidImageUrl from "../utils/isValidImageUrl"
 

@@ -30,7 +30,7 @@ export default function ShoppingList(): ReactElement {
     })();
 
     return () => {};
-  }, []);
+  });
 
   if (isLoading) {
     return (

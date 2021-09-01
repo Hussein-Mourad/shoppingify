@@ -110,6 +110,7 @@ function handleErrors(err: { message: string; code: number; errors: any }) {
   return { errors };
 }
 
+
 export default {
   createProduct,
   findUserProducts,

@@ -39,7 +39,7 @@ function Header(): ReactElement {
           placeholder="search item"
           leftElement={
             <SearchIcon
-              className="z-10 ml-3 text-gray-400 bg-white group-hover:text-gray-600 group-focus-within:text-gray-600"
+              className="z-10 ml-3 text-gray-400 group-hover:text-gray-600 group-focus-within:text-gray-600"
               fontSize="medium"
             />
           }

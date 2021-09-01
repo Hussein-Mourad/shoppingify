@@ -5,6 +5,9 @@ import Button from "components/shared/Button";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import { addProduct } from "features/shoppingList/shoppingListSlice";
 import { selectViewedProduct, deleteProduct } from "features/products/productsSlice";
+import { useState } from "react";
+import Modal from "components/shared/Modal";
+import BackDrop from "components/shared/BackDrop"
 
 type Props = {
   className?: string;
@@ -14,7 +17,7 @@ type Props = {
 function Product({ className, onClose }: Props) {
   const dispatch = useAppDispatch();
   const product = useAppSelector(selectViewedProduct);
-
+  const [showModal, setShowModal] = useState(false);
   const itemDataStyles = "mb-4 font-medium";
   const itemTitleStyles = "text-xs text-gray-500 mb-1";
   return (
@@ -64,7 +67,7 @@ function Product({ className, onClose }: Props) {
       <div className="flex items-center justify-center w-full h-24 px-5 bg-white sm:h-28">
         <Button
           className="px-5 py-3 mr-2 rounded-xl"
-          onClick={()=>dispatch(deleteProduct(product))}
+          onClick={() => setShowModal(true)}
           aria-label="modal cancel button"
           link
         >
@@ -79,6 +82,20 @@ function Product({ className, onClose }: Props) {
           Add to list
         </Button>
       </div>
+      {showModal && (
+        <BackDrop center>
+          <Modal
+            onClose={() => setShowModal(false)}
+            onConfirm={() => dispatch(deleteProduct(product))}
+          >
+            <div className="w-5/6 pb-5">
+              <span className="text-lg font-medium">
+                Are you sure you want to delete this product?
+              </span>
+            </div>
+          </Modal>
+        </BackDrop>
+      )}
     </div>
   );
 }

@@ -17,7 +17,7 @@ export default function SideBarLink({
   return (
     <>
       <Link href={path} passHref>
-        <a className="relative group">
+        <a className="relative group mb-2">
           {isSelected && (
             <span className="absolute top-0 left-0 block w-1 h-full bg-yellow-primary xs:w-2 rounded-r-md"></span>
           )}
@@ -37,7 +37,7 @@ export default function SideBarLink({
             </div>
           )}
           <button
-            className="w-full h-16 transition-all duration-300 ease-in-out text-trueGray-700 active:bg-gray-100/70"
+            className="w-full transition-all duration-300 ease-in-out h-14 text-trueGray-700 active:bg-gray-100/70"
             tabIndex={-1}
           >
             {children}

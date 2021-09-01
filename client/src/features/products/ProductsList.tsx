@@ -23,6 +23,14 @@ export default function ProductsList({}: Props): ReactElement {
     []
   );
 
+  console.log(
+    "🚀 ~ file: ProductsList.tsx ~ line 22 ~ ProductsList ~ products",
+    products
+  );
+  console.log(
+    "🚀 ~ file: ProductsList.tsx ~ line 19 ~ ProductsList ~ productStatus",
+    productStatus
+  );
   useEffect(() => {
     let tmp: ICategoryWithItems<IProduct>[] = [];
 
@@ -37,10 +45,10 @@ export default function ProductsList({}: Props): ReactElement {
           items: [product],
         });
     });
-    tmp.sort((a,b)=> a.name.localeCompare(b.name));
+    tmp.sort((a, b) => a.name.localeCompare(b.name));
     setCategories([...tmp]);
     return () => {};
-  }, [productStatus, filterTerm]);
+  }, [productStatus, filterTerm, dispatch]);
 
   useEffect(() => {
     setFilterTerm((router.query.filter as string) ?? "");

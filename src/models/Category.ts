@@ -6,14 +6,7 @@ export interface ICategory {
   name: string;
 }
 
-interface CategoryModel extends Model<ICategory> {
-  checkUserCategory(
-    _id: string,
-    userId: string
-  ): Promise<ICategory & Document<any, any, ICategory>>;
-}
-
-export const categorySchema = new Schema<ICategory, CategoryModel, ICategory>(
+export const categorySchema = new Schema<ICategory, Model<ICategory>, ICategory>(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -30,20 +23,7 @@ export const categorySchema = new Schema<ICategory, CategoryModel, ICategory>(
   { timestamps: true }
 );
 
-categorySchema.statics.checkUserCategory = async function (
-  _id: string,
-  userId: string
-) {
-  const category = await this.findOne({
-    _id,
-    userId,
-  });
-  if (category) {
-    return category;
-  }
-  throw new Error("Category is not found");
-};
 
-const Category = model("Category", categorySchema);
+const Category = model<ICategory>("Category", categorySchema);
 
 export default Category;

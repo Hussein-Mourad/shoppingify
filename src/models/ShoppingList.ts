@@ -1,19 +1,19 @@
-import { Document, model, PopulatedDoc, Schema } from "mongoose";
+import { Document, model, PopulatedDoc, Schema, Model } from "mongoose";
 import { ICategory } from "./Category";
 
-interface IShoppingList {
+export interface IShoppingListItem {
+  _id: Schema.Types.ObjectId;
+  name: String;
+  category: PopulatedDoc<ICategory & Document>[];
+  quantity: number;
+  completed: Boolean;
+}
+
+export interface IShoppingList {
   userId: Schema.Types.ObjectId;
   name: string;
   status: "cancelled" | "completed" | "current";
-  products: [
-    {
-      _id: Schema.Types.ObjectId;
-      name: String;
-      category: PopulatedDoc<ICategory & Document>[];
-      quantity: number;
-      completed:Boolean;
-    }
-  ];
+  products: IShoppingListItem[];
 }
 
 const shoppingListSchema = new Schema<IShoppingList>(
@@ -40,12 +40,12 @@ const shoppingListSchema = new Schema<IShoppingList>(
         name: String,
         category: { type: Schema.Types.ObjectId, ref: "Category" },
         quantity: { type: Number, default: 0 },
-        completed: { type: Boolean, default: false}
+        completed: { type: Boolean, default: false },
       },
     ],
   },
   { timestamps: true }
 );
 
-const ShoppingList = model("ShoppingList", shoppingListSchema);
+const ShoppingList = model<IShoppingList>("ShoppingList", shoppingListSchema);
 export default ShoppingList;

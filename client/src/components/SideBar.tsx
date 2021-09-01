@@ -34,14 +34,14 @@ export default function SideBar({
   };
 
   return (
-    <aside className="fixed top-0 left-0 z-10 flex flex-col items-center justify-between h-screen pt-4 bg-white shadow-lg w-14 sm:w-20">
+    <aside className="fixed top-0 left-0 flex flex-col items-center justify-between h-screen py-4 bg-white shadow-lg w-14 sm:w-20">
       <Link href="/" passHref>
         <a className="w-12 sm:w-14">
           <Image src={Logo} alt="logo" layout="responsive" />
         </a>
       </Link>
 
-      <div className="flex flex-col justify-between w-full h-[30%]">
+      <div className="flex flex-col justify-between w-full">
         <SideBarLink
           isSelected={router.asPath === "/"}
           path="/"
@@ -63,11 +63,9 @@ export default function SideBar({
         >
           <ChartIcon fontSize="large" />
         </SideBarLink>
-      </div>
 
-      <div className="flex flex-col items-center w-full mb-5">
         <Button
-          className="relative w-full h-12 my-3 group"
+          className="relative w-full group"
           onClick={(e) => handleLogout()}
         >
           <div className="absolute hidden translate-x-4 -translate-y-1/2 left-full top-1/2 group-hover:block group-focus-visible:block">
@@ -80,26 +78,26 @@ export default function SideBar({
             </span>
           </div>
 
-          <div className="w-full transition-all duration-300 ease-in-out text-trueGray-700 active:bg-gray-100/70">
-            <ExitToAppIcon />
+          <div className="flex items-center justify-center w-full transition-all duration-300 ease-in-out h-14 text-trueGray-700 active:bg-gray-100/70">
+            <ExitToAppIcon fontSize="large" />
           </div>
         </Button>
-
-        <Button
-          className="relative w-12 h-12 text-white rounded-full sm:h-14 sm:w-14 focus-visible:ring-2 focus-visible:ring-black/90 focus-visible:ring-offset-2 "
-          onClick={sideDrawerHandler}
-          color="orange"
-          disabled={shoppingListButtonDisabled}
-        >
-          <Badge number={count} />
-          <span className="sm:hidden">
-            <ShoppingCartIcon />
-          </span>
-          <span className="hidden sm:block">
-            <ShoppingCartIcon style={{ fontSize: 30 }} />
-          </span>
-        </Button>
       </div>
+
+      <Button
+        className="relative w-12 h-12 text-white rounded-full sm:h-14 sm:w-14 focus-visible:ring-2 focus-visible:ring-black/90 focus-visible:ring-offset-2 "
+        onClick={sideDrawerHandler}
+        color="orange"
+        disabled={shoppingListButtonDisabled}
+      >
+        <Badge number={count} />
+        <span className="sm:hidden">
+          <ShoppingCartIcon />
+        </span>
+        <span className="hidden sm:block">
+          <ShoppingCartIcon style={{ fontSize: 30 }} />
+        </span>
+      </Button>
     </aside>
   );
 }

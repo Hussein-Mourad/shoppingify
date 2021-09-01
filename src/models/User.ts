@@ -62,5 +62,5 @@ userSchema.statics.isValidUser = async function (_id: string) {
   throw new Error("User not found");
 };
 
-const User = model("User", userSchema);
+const User = model<IUser,UserModel>("User", userSchema);
 export default User;

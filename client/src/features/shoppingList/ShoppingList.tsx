@@ -2,11 +2,16 @@ import ShoppingListItem from "./ShoppingListItem";
 import EditIcon from "@material-ui/icons/Edit";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import Button from "components/shared/Button";
-  import useProductsToCategories from "hooks/useProductsToCategories";
+import useProductsToCategories from "hooks/useProductsToCategories";
 import Image from "next/image";
 import bottleImg from "public/img/bottle.svg";
 import shoppingCartImg from "public/img/shopping.svg";
 import { ReactNode, useState, useEffect } from "react";
+import { setSideDrawerState } from "features/layouts/layoutSlice";
+import { IShoppingListItem } from "types/ShoppingList";
+import ShoppingListForm from "./ShoppingListForm";
+import Modal from "components/shared/Modal";
+import BackDrop from "components/shared/BackDrop";
 import {
   selectShoppingList,
   incrementQuantity,
@@ -14,13 +19,9 @@ import {
   toggleComplete,
   removeProduct,
   fetchShoppingist,
-  createOrUpdateShoppingList,
   cancelList,
   completeList,
 } from "./shoppingListSlice";
-import { setSideDrawerState } from "features/layouts/layoutSlice";
-import { IShoppingListItem } from "types/ShoppingList";
-import ShoppingListForm from "./ShoppingListForm";
 
 function ShoppingList() {
   const dispatch = useAppDispatch();
@@ -30,6 +31,7 @@ function ShoppingList() {
   );
   const [editList, setEditList] = useState(!shoppingList.name);
   const categories = useProductsToCategories(shoppingList.products);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     if (shoppingListStatus === "idle") {
@@ -46,6 +48,21 @@ function ShoppingList() {
 
   return (
     <div className="bg-[#FFF0DE] w-full h-full flex flex-col justify-between">
+      {showModal && (
+        <BackDrop center>
+          <Modal
+            onClose={() => setShowModal(false)}
+            onConfirm={() => dispatch(cancelList())}
+          >
+            <div className="w-5/6 pb-5">
+              <span className="text-lg font-medium">
+                Are you sure you want to cancel this list?
+              </span>
+            </div>
+          </Modal>
+        </BackDrop>
+      )}
+
       <div className="flex flex-col h-full px-4 overflow-auto pt-7 lg:px-6 scrollbar-hidden">
         <div className="bg-[#80485B] flex rounded-3xl w-full mx-auto p-3 sm:p-4  text-white font-bold text-lg">
           <div className="flex items-center justify-center w-1/3">
@@ -131,7 +148,7 @@ function ShoppingList() {
           <>
             <Button
               className="px-5 py-3 mr-2 rounded-xl"
-              onClick={() => dispatch(cancelList())}
+              onClick={() => setShowModal(true)}
               aria-label="modal cancel button"
               link
             >

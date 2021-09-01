@@ -26,7 +26,7 @@ const initialState: IShoppingListState = {
 export const fetchShoppingist = createAsyncThunk(
   "shoppingList/fetchShoppingist",
   async () => {
-    const response = await axios.get("/api/shoppinglist?status=current");
+    const response = await axios.get("/api/shoppinglists?status=current");
     return response.data;
   }
 );
@@ -34,15 +34,10 @@ export const fetchShoppingist = createAsyncThunk(
 export const createOrUpdateShoppingList = createAsyncThunk(
   "shoppingList/updateShoppingList",
   async (shoppingList: IShoppingList) => {
-    const response = await axios.post("/api/shoppinglist/", shoppingList);
+    const response = await axios.post("/api/shoppinglists/", shoppingList);
     return response.data;
   }
 );
-
-export const deleteProduct = createAsyncThunk("shoppingList/deleteProduct", async(product:IProduct)=>{
-  const response =  await axios.delete("/api/products/"+product._id);
-  return response.data
-}) 
 
 export const shoppingListSlice = createSlice({
   name: "shoppingList",
@@ -140,18 +135,7 @@ export const shoppingListSlice = createSlice({
       .addCase(createOrUpdateShoppingList.rejected, (state) => {
         state.status = "failed";
         state.error = "Error updating shopping list data";
-      }).addCase(deleteProduct.pending, (state) => {
-        state.status = "loading";
-        state.error = null;
       })
-      .addCase(deleteProduct.fulfilled, (state, action) => {
-        state.status = "success";
-        state.error = null;
-      })
-      .addCase(deleteProduct.rejected, (state) => {
-        state.status = "failed";
-        state.error = "Error deleting product";
-      });
   },
 });
 
@@ -160,6 +144,7 @@ export const selectShoppingList = (state: AppState) =>
 export const selectProductsCount = (state: AppState) =>
   state.shoppingList.shoppingList.products.length;
 
+  // TODO Ensure that fetching is successful before chaning state
 export const addProduct = (product: IProduct): AppThunk => (
   dispatch,
   getState
@@ -170,10 +155,9 @@ export const addProduct = (product: IProduct): AppThunk => (
       isSideDrawerOpen: true,
       sideDrawerType: "shoppingList",
     })
-  );
+    );
   dispatch(createOrUpdateShoppingList(getState().shoppingList.shoppingList));
 };
-
 
 
 export const removeProduct = (product: IShoppingListItem): AppThunk => (
