@@ -42,7 +42,7 @@ export default function ShoppingList(): ReactElement {
 
   return (
     <TwoSideBarsLayout>
-      <div className="flex flex-col h-full min-h-screen p:2 sm:p-4 md:p-6">
+      <div className="flex flex-col h-full p:2 sm:p-4 md:p-6">
         <div>
           <Button
             className="mt-4 mb-8 text-sm text-yellow-primary"

@@ -61,7 +61,7 @@ export default function AuthCard({ authType, url }: Props): ReactElement {
     })();
 
     return () => {};
-  }, []);
+  });
 
   const formik = useFormik({
     initialValues: { ...initialValues },
@@ -147,7 +147,7 @@ export default function AuthCard({ authType, url }: Props): ReactElement {
           />
           {authType === "Login" ? (
             <small className="block mb-3">
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <Link href="/signup" passHref>
                 <a className="text-blue-500" tabIndex={0}>
                   Register

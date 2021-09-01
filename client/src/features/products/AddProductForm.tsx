@@ -162,9 +162,7 @@ function AddProductFrom({ className }: AddProductFromProps): ReactElement {
               {...formik.getFieldProps("category")}
             />
           </div>
-        </div>
-
-        <div className="z-10 flex items-center justify-center w-full h-24 px-5 bg-white sm:h-28">
+          <div className="flex items-center justify-center w-full h-24 px-5 bg-white sm:h-28">
           <Button
             className="px-5 py-3 mr-2 rounded-xl"
             onClick={() =>
@@ -191,6 +189,35 @@ function AddProductFrom({ className }: AddProductFromProps): ReactElement {
             Save
           </Button>
         </div>
+        </div>
+
+        {/* <div className="flex items-center justify-center w-full h-24 px-5 bg-white sm:h-28">
+          <Button
+            className="px-5 py-3 mr-2 rounded-xl"
+            onClick={() =>
+              dispatch(
+                setSideDrawerState({
+                  isSideDrawerOpen: true,
+                  sideDrawerType: "shoppingList",
+                })
+              )
+            }
+            aria-label="cancel button"
+            link
+          >
+            cancel
+          </Button>
+          <Button
+            type="submit"
+            className="px-5 py-3 text-white rounded-xl"
+            color="orange"
+            onClick={() => {}}
+            aria-label="save button"
+            disabled={!formik.isValid || !formik.dirty}
+          >
+            Save
+          </Button>
+        </div> */}
       </form>
     </>
   );

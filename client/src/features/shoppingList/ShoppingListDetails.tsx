@@ -16,11 +16,7 @@ export default function ShoppingListDetails({
   shoppingList,
 }: Props): ReactElement {
   const categories = useProductsToCategories(shoppingList.products);
-  console.log(
-    "🚀 ~ file: ShoppingListDetails.tsx ~ line 19 ~ categories",
-    categories
-  );
-
+  
   return (
     <div className={`${className} `}>
       <h1 className="text-xl font-bold text-trueGray-800">

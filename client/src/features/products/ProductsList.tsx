@@ -23,14 +23,7 @@ export default function ProductsList({}: Props): ReactElement {
     []
   );
 
-  console.log(
-    "🚀 ~ file: ProductsList.tsx ~ line 22 ~ ProductsList ~ products",
-    products
-  );
-  console.log(
-    "🚀 ~ file: ProductsList.tsx ~ line 19 ~ ProductsList ~ productStatus",
-    productStatus
-  );
+  
   useEffect(() => {
     let tmp: ICategoryWithItems<IProduct>[] = [];
 
@@ -48,6 +41,7 @@ export default function ProductsList({}: Props): ReactElement {
     tmp.sort((a, b) => a.name.localeCompare(b.name));
     setCategories([...tmp]);
     return () => {};
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productStatus, filterTerm, dispatch]);
 
   useEffect(() => {

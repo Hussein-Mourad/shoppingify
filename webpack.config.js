@@ -28,6 +28,8 @@ module.exports = {
       url: false,
       string_decoder: false,
       querystring: false,
+      assert:false,
+      request:false
     },
   },
   output: {

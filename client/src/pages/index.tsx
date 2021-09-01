@@ -17,7 +17,7 @@ export default function Home() {
 
   return (
     <TwoSideBarsLayout>
-      <div className="min-h-screen p-2 sm:p-4 md:p-6">
+      <div className="p-2 sm:p-4 md:p-6">
         <Header />
         <ProductsList />
       </div>

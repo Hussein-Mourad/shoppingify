@@ -45,16 +45,19 @@ async function createOrUpdateCurrentShoppingList(req: Request, res: Response) {
           runValidators: true,
         }
       );
+      shoppingList = await ShoppingList.findOne({ userId, status })
+        .populate("products.category")
+        .exec();
     } else {
       shoppingList = await ShoppingList.create({
         userId,
         name,
         products,
       });
+      shoppingList = await ShoppingList.findOne({ userId, status: "current" })
+        .populate("products.category")
+        .exec();
     }
-    shoppingList = await ShoppingList.findOne({ userId, status })
-      .populate("products.category")
-      .exec();
     res.json({ shoppingList });
   } catch (err) {
     console.error(err);
@@ -119,57 +122,68 @@ async function updateShoppingListById(req: Request, res: Response) {
 
 async function getStatistics(req: Request, res: Response) {
   const userId = res.locals.user?._id;
-  var products: any = [];
-  var categories: any = [];
+  let products: any = [];
+  let categories: any = [];
+
   try {
     const shoppingLists: any = await ShoppingList.find({ userId })
       .sort({ createdAt: -1 })
       .populate("products.category")
       .exec();
-// TODO: Finish this endpoint
-     await shoppingLists.forEach((shoppingList: any) => {
-      shoppingList._doc.products.forEach(async (product: any) => {
-        const productInDB = await Product.findOne({userId, _id:product._doc._id});
+
+    for await (const shoppingList of shoppingLists) {
+      for await (const product of shoppingList.products) {
+        const productInDB = await Product.findOne({
+          userId,
+          _id: product._doc._id,
+        });
+
         if (productInDB) {
           let findResult = products.find((product: any) => {
-            console.log(
-              "🚀 ~ file: shoppingList.ts ~ line 136 ~ shoppingList._doc.products.forEach ~ product._id === productInDB._id",
-              product.name,
-              productInDB.name
-            );
             return product.name === productInDB.name;
           });
-          console.log(
-            "🚀 ~ file: shoppingList.ts ~ line 137 ~ shoppingList._doc.products.forEach ~ findResult",
-            findResult
-          );
+
           if (findResult) {
             findResult.count++;
+            findResult.percentage =
+              (findResult.count / shoppingLists.length) * 100;
           } else {
-            products.push({ ...product._doc, count: 1 });
-            // console.log("🚀 ~ file: shoppingList.ts ~ line 142 ~ shoppingList._doc.products.forEach ~ products", products)
+            products.push({
+              ...product._doc,
+              count: 1,
+              percentage: (1 / shoppingLists.length) * 100,
+            });
           }
         }
+      }
+    }
 
-        // let findResult = categories.find(
-        //   //@ts-ignore
-        //   (category: any) => category._id === product._doc.category._id
-        //   );
-        //   if (findResult) {
-        //     findResult.count++;
-        // } else {
-        //   categories.push({ ...category._doc, count: 1 });
-        // }
-      });
-    });
-    console.log(
-      "🚀 ~ file: shoppingList.ts ~ line 137 ~ shoppingList._doc.products.forEach ~ products",
-      products
-    );
+    for  (const product of products){
+      let findResult = categories.find(
+        (category: any) => category._id === product.category._id
+      );
 
+      if (findResult) {
+        findResult.count++;
+        findResult.percentage =
+              (findResult.count / products.length) * 100;
+      } else {
+        categories.push({
+          _id: product.category._id,
+          name: product.category.name,
+          count: 1,
+          percentage:(1 / products.length) * 100,
+        });
+      }
+    }
+
+    if(products.length===0&&categories.length===0){
+      throw new Error("No data found.");
+    }
     res.json({ products, categories });
   } catch (err) {
-    res.status(400).json({ shoppingLists: null });
+    console.error(err);
+    res.status(400).json({ error:{message:"No data found."}});
   }
 }
 
@@ -205,3 +219,4 @@ export default {
   updateShoppingListById,
   getStatistics,
 };
+

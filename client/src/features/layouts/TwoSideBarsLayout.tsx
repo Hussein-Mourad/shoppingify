@@ -18,7 +18,7 @@ export default function Layout({ children }: Props) {
     (state: AppState) => state.layout
   );
 
-  const contentStyle = cn("ml-14 sm:ml-20 px-5 bg-gray-50", {
+  const contentStyle = cn("ml-14 sm:ml-20 px-5 bg-gray-50 min-h-screen", {
     "hidden md:block md:mr-80 lg:mr-96": isSideDrawerOpen,
   });
 
