@@ -1,11 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 import ShoppingListItem from "./ShoppingListItem";
 import EditIcon from "@material-ui/icons/Edit";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import Button from "components/shared/Button";
 import useProductsToCategories from "hooks/useProductsToCategories";
-import Image from "next/image";
-import bottleImg from "public/img/bottle.svg";
-import shoppingCartImg from "public/img/shopping.svg";
 import { ReactNode, useState, useEffect } from "react";
 import { setSideDrawerState } from "features/layouts/layoutSlice";
 import { IShoppingListItem } from "types/ShoppingList";
@@ -67,7 +65,7 @@ function ShoppingList() {
       <div className="flex flex-col h-full px-4 overflow-auto pt-7 lg:px-6 scrollbar-hidden">
         <div className="bg-[#80485B] flex rounded-3xl w-full mx-auto p-3 sm:p-4  text-white font-bold text-lg">
           <div className="flex items-center justify-center w-1/3">
-            <Image src={bottleImg} alt="bottle" width="80" height="120" />
+            <img src="/img/bottle.svg" alt="bottle" width="80" height="120" />
           </div>
           <div className="flex items-center mt-1 ml-5">
             <div>
@@ -134,8 +132,8 @@ function ShoppingList() {
           <div className="relative flex flex-col items-center justify-center w-full h-full mt-6 text-xl font-semibold ">
             <p className="flex items-center justify-center h-1/2">No items</p>
             <div className="flex items-end justify-center w-full h-1/2">
-              <Image
-                src={shoppingCartImg}
+              <img
+                src="/img/shopping.svg"
                 alt="shopping cart image"
                 width="200"
               />

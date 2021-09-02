@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import Image from "next/image";
 import React from "react";
@@ -36,7 +37,7 @@ function Product({ className, onClose }: Props) {
 
           {product.imageUrl && (
             <div className="w-full mb-8">
-              <Image
+              <img
                 className="rounded-xl"
                 src={product.imageUrl}
                 alt={product.name}

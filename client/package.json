@@ -2,6 +2,9 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "v14.7.5"
+  },
   "scripts": {
     "dev": "cross-env NODE_ENV=development; node ./devServer.js",
     "dev:next": "cross-env NODE_ENV=development; next dev",
@@ -51,6 +54,7 @@
     "eslint-config-next": "11.0.1",
     "eslint-import-resolver-typescript": "^2.4.0",
     "express": "^4.17.1",
+    "http-proxy-middleware": "^2.0.1",
     "jest": "^27.0.6",
     "postcss": "^8.3.6",
     "prettier": "^2.2.1",

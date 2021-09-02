@@ -2,14 +2,13 @@
   "name": "shoppingify",
   "version": "0.0.0",
   "private": true,
-  "main": "dist/app",
+  "main": "dist/index.js",
   "engines": {
     "node": "v14.17.0"
   },
   "scripts": {
-    "start": "node ./dist/app.bundle.js",
+    "start": "node ./dist/index.js",
     "build": "tsc -p .",
-    "build:webpack": "webpack",
     "dev": "kill-port 8000 3000;npm-run-all --parallel dev:server dev:client",
     "dev:server": "kill-port 8000; DEBUG=shoppingify:* nodemon ./src/index.ts",
     "dev:client": "kill-port 3000; npm run dev --prefix client",
@@ -66,17 +65,14 @@
     "chai": "^4.3.4",
     "chai-http": "^4.3.0",
     "express-session": "^1.17.2",
-    "http-proxy-middleware": "^2.0.1",
     "kill-port": "^1.6.1",
     "mocha": "^9.0.3",
     "nodemon": "^2.0.12",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.3.2",
-    "ts-loader": "^9.2.5",
+    "rimraf": "^3.0.2",
     "ts-node": "^10.2.0",
     "tslib": "^2.3.0",
-    "typescript": "^4.3.5",
-    "webpack": "^5.49.0",
-    "webpack-cli": "^4.7.2"
+    "typescript": "^4.3.5"
   }
 }

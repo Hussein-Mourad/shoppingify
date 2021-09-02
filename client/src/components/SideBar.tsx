@@ -1,13 +1,12 @@
+/* eslint-disable @next/next/no-img-element */
 import ChartIcon from "@material-ui/icons/InsertChartOutlined";
 import ListIcon from "@material-ui/icons/List";
 import ReplayIcon from "@material-ui/icons/Replay";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCartOutlined";
 import { useAppSelector } from "app/hooks";
 import { selectProductsCount } from "features/shoppingList/shoppingListSlice";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import Logo from "public/img/logo.svg";
 import Badge from "./shared/Badge";
 import Button from "./shared/Button";
 import SideBarLink from "./SideBarLink";
@@ -37,7 +36,7 @@ export default function SideBar({
     <aside className="fixed top-0 left-0 flex flex-col items-center justify-between h-screen py-4 bg-white shadow-lg w-14 sm:w-20">
       <Link href="/" passHref>
         <a className="w-12 sm:w-14">
-          <Image src={Logo} alt="logo" layout="responsive" />
+          <img src="/img/logo.svg" alt="logo"  className="w-full"/>
         </a>
       </Link>
 

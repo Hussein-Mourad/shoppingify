@@ -74,7 +74,7 @@ export default function AuthCard({ authType, url }: Props): ReactElement {
         const response = await axios.post(url, values);
         router.push("/");
       } catch (err) {
-        if (err?.response?.data) {
+        if (err?.response?.data.errors) {
           const data  = err.response.data;
           actions.setErrors({
             username: data.errors.username,

@@ -10,6 +10,7 @@ import authRouter from "./routes/auth";
 import categoryRouter from "./routes/category";
 import productRouter from "./routes/product";
 import shoppingListRouter from "./routes/shoppingList";
+import fs from "fs";
 
 dotenv.config();
 
@@ -21,14 +22,13 @@ connectDB(() => {
   console.info("Listening on http://localhost:" + port);
 });
 
-app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIES_SECRET));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "../public")));
 
 app.use(
   session({
