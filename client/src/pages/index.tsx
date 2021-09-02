@@ -1,6 +1,5 @@
 import Header from "components/Header";
 import TwoSideBarsLayout from "features/layouts/TwoSideBarsLayout";
-import ShoppingList from "features/shoppingList/ShoppingList";
 import useAuthentication from "hooks/useAuthentication";
 import { CircularProgress } from "@material-ui/core";
 import ProductsList from "features/products/ProductsList";

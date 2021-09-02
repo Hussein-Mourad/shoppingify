@@ -1,6 +1,6 @@
 import IProduct from "./Product";
 export default interface IShoppingList {
-  _id: string;
+  readonly _id: string;
   name: string;
   status: "cancelled" | "completed" | "current";
   products: IShoppingListItem[];

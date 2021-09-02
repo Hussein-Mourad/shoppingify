@@ -16,7 +16,5 @@ const Template: ComponentStory<typeof Grid> = (args) => (
   );
 
 export const Default = Template.bind({});
-Default.args = {
-  number:0
-};
+Default.args = {};
 

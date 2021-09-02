@@ -15,13 +15,13 @@ export default function Home() {
   }
 
   return (
-      <TwoSideBarsLayout>
-        <div className="p-2 sm:p-4 md:p-6">
-          <h1 className="mb-3 text-2xl font-semibold sm:mb-5 text-trueGray-700">
-            Shopping history
-          </h1>
+    <TwoSideBarsLayout>
+      <div className="min-h-screen p-2 sm:p-4 md:p-6">
+        <h1 className="mb-3 text-2xl font-semibold sm:mb-5 text-trueGray-700">
+          Shopping history
+        </h1>
           <ShoppingLists />
-        </div>
-      </TwoSideBarsLayout>
+      </div>
+    </TwoSideBarsLayout>
   );
 }

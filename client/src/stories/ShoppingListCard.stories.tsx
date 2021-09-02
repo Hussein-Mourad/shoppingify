@@ -17,8 +17,3 @@ const Template: ComponentStory<typeof ShoppingListCard> = (args) => (
 );
 
 export const Default = Template.bind({});
-Default.args = {
-  text: "klsdgjsdgksdgjk",
-  date: new Date(),
-  listState: "canceled",
-};

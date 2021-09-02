@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
+import Product from "../models/Product";
+import Category from "../models/Category";
 
 const TEN_DAYS_IN_SECONDS = 10 * 24 * 60 * 60;
 const TEN_DAYS_IN_MILLISECONDS = TEN_DAYS_IN_SECONDS * 1000;
@@ -42,6 +44,25 @@ async function signup(req: Request, res: Response) {
       httpOnly: true,
       maxAge: TEN_DAYS_IN_MILLISECONDS,
       signed: true,
+    });
+
+    const category1 = await Category.create({
+      userId: user._id,
+      name: "Fruits and Vegetables",
+    });
+    const category2 = await Category.create({
+      userId: user._id,
+      name: "Beverages",
+    });
+    await Product.create({
+      userId: user._id,
+      name: "Avocado",
+      category: category1._id,
+    });
+    await Product.create({
+      userId: user._id,
+      name: "Coffee",
+      category: category2._id,
     });
 
     res.status(201).json({

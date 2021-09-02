@@ -5,7 +5,7 @@ export interface ISideDrawerState {
   sideDrawerType: "shoppingList" | "addForm" | "viewContent";
 }
 const initialState: ISideDrawerState = {
-  isSideDrawerOpen: false,
+  isSideDrawerOpen: true,
   sideDrawerType: "shoppingList",
 };
 

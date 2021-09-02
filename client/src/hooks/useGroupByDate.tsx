@@ -35,6 +35,7 @@ export default function useGroupByDate<T>(
 
     setDates([...tmp]);
     return () => {};
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dependency]);
 
   return dates;

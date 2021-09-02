@@ -21,6 +21,7 @@ export default function useProductsToCategories<T>(products: T[], dependency?: A
 
     setCategories([...tmp]);
     return () => {};
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dependency]);
 
   return categories;

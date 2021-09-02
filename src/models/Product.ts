@@ -42,7 +42,7 @@ export const productSchema = new Schema<IProduct>(
     category: {
       type: Schema.Types.ObjectId,
       ref: "Category",
-      required: [true, "Category id is required"],
+      required: [true, "Category is required"],
     },
   },
   { timestamps: true, discriminatorKey:"kind" }

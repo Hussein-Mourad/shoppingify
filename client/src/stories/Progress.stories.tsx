@@ -1,6 +1,6 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import React from "react";
-import Progress from "../components/Progress";
+import Progress from "../components/shared/Progress";
 
 export default {
   title: "Components/Progress",

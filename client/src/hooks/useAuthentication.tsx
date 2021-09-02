@@ -24,6 +24,7 @@ export default function useAuthentication() {
     })();
 
     return () => {};
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { user, isLoading };

@@ -23,6 +23,7 @@ export default function ShoppingListForm({ setEditList }: Props): ReactElement {
     return () => {
       
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shoppingListStatus])
 
   const inputStyle = cn(

@@ -2,7 +2,7 @@ import IShoppingList, { IShoppingListItem } from "./ShoppingList";
 import IProduct from "./Product"
 
 export default interface ICategory {
-  _id?: string;
+  readonly _id?: string;
   name: string;
 }
 

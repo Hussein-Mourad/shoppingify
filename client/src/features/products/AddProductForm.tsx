@@ -97,8 +97,8 @@ function AddProductFrom({ className }: AddProductFromProps): ReactElement {
         onSubmit={formik.handleSubmit}
         autoComplete="off"
       >
-        <div className="flex-1 w-full px-5 pt-4 overflow-auto scrollbar-hidden">
-          <div>
+        <div className="flex-1 w-full h-full px-5 pt-4 overflow-auto scrollbar-hidden">
+          <div className="mb-8">
             <h1 className="mb-5 text-2xl font-semibold">Add a new item</h1>
             <InputGroup
               parentClassName="my-4"
@@ -120,8 +120,8 @@ function AddProductFrom({ className }: AddProductFromProps): ReactElement {
               id="note"
               label="Note (optional) "
               placeholder="Enter a note"
-              inputClassName="py-3 pl-3 border-2 border-gray-400  hover:border-gray-800 focus:ring-0 focus:border-gray-800 resize-y-none"
-              maxLength={500}
+              inputClassName="py-3 pl-3 border-2 border-gray-400  hover:border-gray-800 focus:ring-0 focus:border-gray-800 resize-y-none min-h-[100px] max-h-80"
+              maxLength={300}
               rows={4}
               error={
                 formik.touched.note && formik.errors.note
@@ -163,61 +163,33 @@ function AddProductFrom({ className }: AddProductFromProps): ReactElement {
             />
           </div>
           <div className="flex items-center justify-center w-full h-24 px-5 bg-white sm:h-28">
-          <Button
-            className="px-5 py-3 mr-2 rounded-xl"
-            onClick={() =>
-              dispatch(
-                setSideDrawerState({
-                  isSideDrawerOpen: true,
-                  sideDrawerType: "shoppingList",
-                })
-              )
-            }
-            aria-label="cancel button"
-            link
-          >
-            cancel
-          </Button>
-          <Button
-            type="submit"
-            className="px-5 py-3 text-white rounded-xl"
-            color="orange"
-            onClick={() => {}}
-            aria-label="save button"
-            disabled={!formik.isValid || !formik.dirty}
-          >
-            Save
-          </Button>
+            <Button
+              className="px-5 py-3 mr-2 rounded-xl"
+              onClick={() =>
+                dispatch(
+                  setSideDrawerState({
+                    isSideDrawerOpen: true,
+                    sideDrawerType: "shoppingList",
+                  })
+                )
+              }
+              aria-label="cancel button"
+              link
+            >
+              cancel
+            </Button>
+            <Button
+              type="submit"
+              className="px-5 py-3 text-white rounded-xl"
+              color="orange"
+              onClick={() => {}}
+              aria-label="save button"
+              disabled={!formik.isValid || !formik.dirty}
+            >
+              Save
+            </Button>
+          </div>
         </div>
-        </div>
-
-        {/* <div className="flex items-center justify-center w-full h-24 px-5 bg-white sm:h-28">
-          <Button
-            className="px-5 py-3 mr-2 rounded-xl"
-            onClick={() =>
-              dispatch(
-                setSideDrawerState({
-                  isSideDrawerOpen: true,
-                  sideDrawerType: "shoppingList",
-                })
-              )
-            }
-            aria-label="cancel button"
-            link
-          >
-            cancel
-          </Button>
-          <Button
-            type="submit"
-            className="px-5 py-3 text-white rounded-xl"
-            color="orange"
-            onClick={() => {}}
-            aria-label="save button"
-            disabled={!formik.isValid || !formik.dirty}
-          >
-            Save
-          </Button>
-        </div> */}
       </form>
     </>
   );

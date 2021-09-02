@@ -1,7 +1,7 @@
 import ICategory from "./Category";
 
 export default interface IProduct {
-  _id: string;
+  readonly _id: string;
   imageUrl?: string;
   name: string;
   category: ICategory;

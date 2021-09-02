@@ -15,14 +15,14 @@ export default function ShoppingList(): ReactElement {
   const [shoppingList, setShoppingList] = useState<IShoppingList | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const { user, isLoading } = useAuthentication();
+  const { isLoading } = useAuthentication();
 
   useEffect(() => {
     const { id } = router.query;
 
     (async () => {
       try {
-        const response = await axios.get("/api/shoppinglist/" + id);
+        const response = await axios.get("/api/shoppinglists/" + id);
         setShoppingList(response.data.shoppingList);
       } catch (error) {
         setError("Item not found.");
@@ -30,7 +30,9 @@ export default function ShoppingList(): ReactElement {
     })();
 
     return () => {};
-  });
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (isLoading) {
     return (

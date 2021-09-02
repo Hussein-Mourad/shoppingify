@@ -12,6 +12,7 @@ export default function ShoppingLists({}: Props): ReactElement {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const shoppingListsGroupedByDate = useGroupByDate(shoppingLists);
+ 
   const months = [
     "January",
     "February",
@@ -47,6 +48,14 @@ export default function ShoppingLists({}: Props): ReactElement {
         <CircularProgress classes={{ circle: "text-yellow-primary" }} />
       </div>
     );
+
+  if (shoppingListsGroupedByDate.length == 0) {
+  return (
+    <div className="flex items-center justify-center w-full h-72 text-red-500/90">
+      No data found.
+    </div>
+  );
+  }
 
   return (
     <div>

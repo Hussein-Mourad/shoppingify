@@ -85,6 +85,7 @@ async function findUserShoppingLists(req: Request, res: Response) {
 
 async function findUserShoppingListById(req: Request, res: Response) {
   const userId = res.locals.user?._id;
+
   try {
     const shoppingList = await ShoppingList.findOne({
       _id: req.params.id,
@@ -145,45 +146,93 @@ async function getStatistics(req: Request, res: Response) {
 
           if (findResult) {
             findResult.count++;
-            findResult.percentage =
-              (findResult.count / shoppingLists.length) * 100;
+            findResult.percentage = +(
+              (findResult.count / shoppingLists.length) *
+              100
+            ).toFixed(2);
           } else {
             products.push({
               ...product._doc,
               count: 1,
-              percentage: (1 / shoppingLists.length) * 100,
+              percentage: +((1 / shoppingLists.length) * 100).toFixed(2),
             });
           }
         }
       }
     }
 
-    for  (const product of products){
+    for (const product of products) {
       let findResult = categories.find(
         (category: any) => category._id === product.category._id
       );
 
       if (findResult) {
         findResult.count++;
-        findResult.percentage =
-              (findResult.count / products.length) * 100;
+        findResult.percentage = +(
+          (findResult.count / products.length) *
+          100
+        ).toFixed(2);
       } else {
         categories.push({
           _id: product.category._id,
           name: product.category.name,
           count: 1,
-          percentage:(1 / products.length) * 100,
+          percentage: +((1 / products.length) * 100).toFixed(2),
         });
       }
     }
 
-    if(products.length===0&&categories.length===0){
+    if (products.length === 0 && categories.length === 0) {
       throw new Error("No data found.");
     }
+
+    products = products
+      .sort((a: any, b: any) => b.percentage - a.percentage)
+      .slice(0, 3);
+    categories = categories
+      .sort((a: any, b: any) => b.percentage - a.percentage)
+      .slice(0, 3);
+
     res.json({ products, categories });
   } catch (err) {
     console.error(err);
-    res.status(400).json({ error:{message:"No data found."}});
+    res.status(400).json({ error: { message: "No data found." } });
+  }
+}
+
+async function getChartData(req: Request, res: Response) {
+  const userId = res.locals.user?._id;
+  const months = [
+    "Jan",
+    "Feb",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  try {
+    let data: any = [];
+    months.forEach((month) => data.push({ month, products: 0 }));
+    const shoppingLists = (await ShoppingList.find({ userId })) as any;
+    for (const shoppingList of shoppingLists) {
+      let month = new Date(shoppingList.createdAt).getMonth();
+      let result = data.find((item: any) => item.month === months[month]);
+      if (result) {
+        result.products += shoppingList.products.length;
+      }
+    }
+
+    res.json({ stats: data });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ shoppingLists: null });
   }
 }
 
@@ -218,5 +267,6 @@ export default {
   findUserShoppingListById,
   updateShoppingListById,
   getStatistics,
+  getChartData,
 };
 

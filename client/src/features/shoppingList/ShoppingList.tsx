@@ -40,6 +40,7 @@ function ShoppingList() {
     if (shoppingListStatus == "success") {
       setEditList(!shoppingList.name);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shoppingListStatus]);
 
   const toggleEditList = () => {
