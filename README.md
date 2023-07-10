@@ -8,10 +8,10 @@
 
 <div align="center">
   <h3>
-    <a href="https://shoppingify-app.herokuapp.com/">
+<!--     <a href="https://shoppingify-app.herokuapp.com/">
       Demo
     </a>
-    <span> | </span>
+    <span> | </span> -->
     <a href="https://github.com/Hussein-Mourad/shoppingify/">
       Solution
     </a>
